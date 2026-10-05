@@ -5,13 +5,15 @@
     TriangleAlert,
     CircleAlert,
     X,
-  } from '@lucide/svelte';
+  } from "@lucide/svelte";
+  import { cn } from "../../lib/utils.js";
 
   let {
-    type = 'info',
-    message = '',
+    type = "info",
+    message = "",
     dismissible = false,
     onDismiss = undefined,
+    class: className = "",
     children = undefined,
   } = $props();
 
@@ -20,22 +22,38 @@
       onDismiss();
     }
   }
+
+  const typeStyles = {
+    info: "bg-zinc-50 border-zinc-200 text-zinc-900 [&>svg]:text-zinc-900",
+    success: "bg-emerald-50/60 border-emerald-200 text-emerald-900 [&>svg]:text-emerald-700",
+    warning: "bg-amber-50/60 border-amber-200 text-amber-900 [&>svg]:text-amber-700",
+    danger: "bg-rose-50/60 border-rose-200 text-rose-900 [&>svg]:text-rose-700",
+  };
 </script>
 
-<div class="alert alert-{type}" role="alert">
-  <div class="alert-icon">
-    {#if type === 'success'}
+<div
+  role="alert"
+  class={cn(
+    "alert",
+    `alert-${type}`,
+    "relative flex w-full items-start gap-3 rounded-lg border p-3.5 text-sm shadow-xs transition-all",
+    typeStyles[type] || typeStyles.info,
+    className
+  )}
+>
+  <div class="alert-icon flex shrink-0 items-center justify-center pt-0.5">
+    {#if type === "success"}
       <CircleCheck size={18} />
-    {:else if type === 'warning'}
+    {:else if type === "warning"}
       <TriangleAlert size={18} />
-    {:else if type === 'danger'}
+    {:else if type === "danger"}
       <CircleAlert size={18} />
     {:else}
       <Info size={18} />
     {/if}
   </div>
 
-  <div class="alert-content">
+  <div class="alert-content flex-1 leading-relaxed">
     {#if message}
       <span>{message}</span>
     {/if}
@@ -47,79 +65,11 @@
   {#if dismissible}
     <button
       type="button"
-      class="close-btn"
+      class="close-btn shrink-0 rounded-md p-1 text-zinc-500 hover:text-zinc-900 hover:bg-black/5 transition-colors cursor-pointer"
       aria-label="Đóng thông báo"
       onclick={handleDismiss}
     >
-      <X size={16} />
+      <X size={15} />
     </button>
   {/if}
 </div>
-
-<style>
-  .alert {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    border-radius: var(--pico-border-radius, 0.25rem);
-    font-size: 0.925rem;
-    border-left: 4px solid currentColor;
-  }
-
-  .alert-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .alert-info {
-    background-color: var(--pico-card-background-color, #f4f6f8);
-    color: var(--pico-primary, #0070f3);
-    border-left-color: var(--pico-primary, #0070f3);
-  }
-
-  .alert-success {
-    background-color: rgba(46, 125, 50, 0.1);
-    color: #2e7d32;
-    border-left-color: #2e7d32;
-  }
-
-  .alert-warning {
-    background-color: rgba(237, 108, 2, 0.1);
-    color: #ed6c02;
-    border-left-color: #ed6c02;
-  }
-
-  .alert-danger {
-    background-color: rgba(211, 47, 47, 0.1);
-    color: #d32f2f;
-    border-left-color: #d32f2f;
-  }
-
-  .alert-content {
-    flex: 1;
-  }
-
-  .close-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    color: currentColor;
-    cursor: pointer;
-    padding: 0.25rem;
-    margin: 0;
-    width: auto;
-    border-radius: var(--pico-border-radius, 0.25rem);
-    opacity: 0.75;
-    transition: opacity 0.2s;
-  }
-
-  .close-btn:hover {
-    opacity: 1;
-  }
-</style>
