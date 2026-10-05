@@ -1,5 +1,6 @@
 <script>
   import { X } from "@lucide/svelte";
+  import { cn } from "../../lib/utils.js";
 
   let {
     open = false,
@@ -7,6 +8,7 @@
     onClose = undefined,
     children = undefined,
     footer = undefined,
+    class: className = "",
   } = $props();
 
   function handleClose() {
@@ -23,61 +25,46 @@
 </script>
 
 {#if open}
-  <dialog open onclick={handleBackdropClick}>
-    <article>
-      <header>
+  <dialog
+    open
+    onclick={handleBackdropClick}
+    class="fixed inset-0 z-50 m-0 h-full w-full max-h-none max-w-none border-0 bg-black/40 backdrop-blur-xs p-4 flex items-center justify-center outline-none animate-in fade-in duration-150"
+  >
+    <article
+      class={cn(
+        "relative w-full max-w-lg rounded-xl border border-zinc-200 bg-white p-6 shadow-2xl text-zinc-900 transition-all",
+        className,
+      )}
+    >
+      <header
+        class="flex items-center justify-between pb-3 border-b border-zinc-100"
+      >
+        <h3 class="text-lg font-semibold tracking-tight text-zinc-900 m-0">
+          {title}
+        </h3>
         <button
           type="button"
           aria-label="Đóng"
-          class="modal-close-btn"
+          class="modal-close-btn rounded-md p-1 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors cursor-pointer"
           onclick={handleClose}
         >
           <X size={18} />
         </button>
-        <h3>{title}</h3>
       </header>
 
-      <div class="modal-body">
+      <div class="modal-body py-4 text-sm text-zinc-700">
         {#if children}
           {@render children()}
         {/if}
       </div>
 
       {#if footer}
-        <footer>
+        <footer
+          class="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100"
+        >
           {@render footer()}
         </footer>
       {/if}
     </article>
   </dialog>
 {/if}
-
-<style>
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    order: 1;
-  }
-  .modal-close-btn {
-    order: 2;
-    background: transparent;
-    border: none;
-    padding: 0.25rem;
-    margin: 0;
-    width: auto;
-    color: var(--pico-muted-color, #888);
-    cursor: pointer;
-    line-height: 1;
-  }
-  .modal-close-btn:hover {
-    color: var(--pico-color, #111);
-  }
-  .modal-body {
-    margin: 1rem 0;
-  }
-</style>
