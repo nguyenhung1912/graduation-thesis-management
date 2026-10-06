@@ -38,7 +38,7 @@ public class StudentServiceImpl implements StudentService {
         existingStudent.setClassName(studentDetails.getClassName());
         existingStudent.setEmail(studentDetails.getEmail());
         existingStudent.setGpa(studentDetails.getGpa());
-        existingStudent.setEligibleForDefense(studentDetails.getEligibleForDefense());
+        existingStudent.setEligible(studentDetails.isEligible());
 
         return studentRepository.save(existingStudent);
     }

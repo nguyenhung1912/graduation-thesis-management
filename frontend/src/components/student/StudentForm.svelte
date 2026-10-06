@@ -13,8 +13,9 @@
     onCancel = undefined,
   } = $props();
 
+  // Đổi initialData?.id thành studentId
   // svelte-ignore state_referenced_locally
-  let id = $state(initialData?.id ?? '');
+  let studentId = $state(initialData?.studentId ?? '');
   // svelte-ignore state_referenced_locally
   let fullName = $state(initialData?.fullName ?? '');
   // svelte-ignore state_referenced_locally
@@ -29,7 +30,7 @@
     event.preventDefault();
     errorMessage = '';
 
-    const cleanId = id.trim().toUpperCase();
+    const cleanId = studentId.trim().toUpperCase();
     const cleanFullName = fullName.trim();
     const cleanClass = className.trim().toUpperCase();
     const cleanEmail = email.trim();
@@ -53,8 +54,9 @@
     }
 
     if (onSubmit) {
+      // Gửi đúng key studentId lên Backend
       onSubmit({
-        id: cleanId,
+        studentId: cleanId,
         fullName: cleanFullName,
         className: cleanClass,
         email: cleanEmail || `${cleanId.toLowerCase()}@soa.edu.vn`,
@@ -81,7 +83,7 @@
         type="text"
         id="student-id"
         placeholder="SV01, 20210001..."
-        bind:value={id}
+        bind:value={studentId}
         disabled={isEdit || isSubmitting}
         required
         class="h-9 w-full rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-950 disabled:bg-zinc-100 disabled:text-zinc-400"

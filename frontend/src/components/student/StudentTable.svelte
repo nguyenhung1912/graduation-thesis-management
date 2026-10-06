@@ -19,7 +19,7 @@
       const term = searchTerm.toLowerCase().trim();
       if (!term) return true;
       return (
-        s.id.toLowerCase().includes(term) ||
+        s.studentId.toLowerCase().includes(term) ||
         s.fullName.toLowerCase().includes(term) ||
         (s.className && s.className.toLowerCase().includes(term)) ||
         (s.email && s.email.toLowerCase().includes(term))
@@ -72,10 +72,10 @@
             </td>
           </tr>
         {:else}
-          {#each filteredStudents as student (student.id)}
+          {#each filteredStudents as student (student.studentId)}
             {@const eligible = isEligible(student)}
             <tr class="hover:bg-zinc-50/60 transition-colors">
-              <td class="px-4 py-3.5 font-medium text-zinc-900 font-mono text-xs"><strong>{student.id}</strong></td>
+              <td class="px-4 py-3.5 font-medium text-zinc-900 font-mono text-xs"><strong>{student.studentId}</strong></td>
               <td class="px-4 py-3.5 text-zinc-900 font-medium">{student.fullName}</td>
               <td class="px-4 py-3.5 text-zinc-600">
                 <code class="rounded bg-zinc-100 px-2 py-0.5 text-xs text-zinc-700 font-mono">{student.className ?? 'N/A'}</code>
@@ -97,7 +97,7 @@
                     <button
                       type="button"
                       class="outline action-btn h-8 w-8 inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950 transition-colors cursor-pointer"
-                      aria-label="Sửa sinh viên {student.id}"
+                      aria-label="Sửa sinh viên {student.studentId}"
                       onclick={() => onEdit(student)}
                       title="Sửa sinh viên"
                     >
@@ -108,7 +108,7 @@
                     <button
                       type="button"
                       class="outline secondary action-btn danger-btn h-8 w-8 inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-colors cursor-pointer"
-                      aria-label="Xóa sinh viên {student.id}"
+                      aria-label="Xóa sinh viên {student.studentId}"
                       onclick={() => onDelete(student)}
                       title="Xóa sinh viên"
                     >

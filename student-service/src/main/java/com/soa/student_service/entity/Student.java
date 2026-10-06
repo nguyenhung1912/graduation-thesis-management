@@ -34,5 +34,5 @@ public class Student {
     private Double gpa;
 
     @Column(name = "DA_DU_DIEU_KIEN", nullable = false)
-    private Boolean eligibleForDefense;
+    private boolean eligible;
 }
