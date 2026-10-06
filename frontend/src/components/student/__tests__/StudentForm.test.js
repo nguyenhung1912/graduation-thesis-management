@@ -15,7 +15,7 @@ describe('StudentForm Component (Dumb Component Unit Tests)', () => {
 
   it('renders initialData and disables ID input when isEdit is true', () => {
     const existing = {
-      id: 'SV01',
+      studentId: 'SV01',
       fullName: 'Trần Văn An',
       className: 'CNTT01',
       email: 'an@soa.edu.vn',
@@ -69,7 +69,7 @@ describe('StudentForm Component (Dumb Component Unit Tests)', () => {
     await fireEvent.click(submitBtn);
 
     expect(onSubmitMock).toHaveBeenCalledWith({
-      id: 'SV10',
+      studentId: 'SV10',
       fullName: 'Phạm Đức Trọng',
       className: 'CNTT03',
       email: 'sv10@soa.edu.vn',

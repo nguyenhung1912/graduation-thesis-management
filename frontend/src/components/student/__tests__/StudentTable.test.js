@@ -4,8 +4,8 @@ import StudentTable from '../StudentTable.svelte';
 
 describe('StudentTable Component (Dumb Component Unit Tests)', () => {
   const sampleStudents = [
-    { id: 'SV01', fullName: 'Trần Văn An', className: 'CNTT01', email: 'an@soa.edu.vn', gpa: 3.2, eligible: true },
-    { id: 'SV02', fullName: 'Lê Thị Bình', className: 'CNTT02', email: 'binh@soa.edu.vn', gpa: 2.1, eligible: false },
+    { studentId: 'SV01', fullName: 'Trần Văn An', className: 'CNTT01', email: 'an@soa.edu.vn', gpa: 3.2, eligible: true },
+    { studentId: 'SV02', fullName: 'Lê Thị Bình', className: 'CNTT02', email: 'binh@soa.edu.vn', gpa: 2.1, eligible: false },
   ];
 
   it('renders student data and calculates eligibility badge', () => {
