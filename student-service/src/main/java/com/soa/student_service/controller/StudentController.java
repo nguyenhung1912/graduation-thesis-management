@@ -1,11 +1,12 @@
-package com.soa.student.controller;
+package com.soa.student_service.controller;
 
-import com.soa.student.entity.Student;
-import com.soa.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.soa.student_service.entity.Student;
+import com.soa.student_service.service.StudentService;
 
 import java.util.List;
 
@@ -33,7 +34,8 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable("id") String studentId, @RequestBody Student studentDetails) {
+    public ResponseEntity<Student> updateStudent(@PathVariable("id") String studentId,
+            @RequestBody Student studentDetails) {
         return ResponseEntity.ok(studentService.updateStudent(studentId, studentDetails));
     }
 

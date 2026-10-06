@@ -1,9 +1,8 @@
-package com.soa.student.repository;
+package com.soa.student_service.repository;
 
-import com.soa.student.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import com.soa.student_service.entity.Student;
+
 public interface StudentRepository extends JpaRepository<Student, String> {
 }

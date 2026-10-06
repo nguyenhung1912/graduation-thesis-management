@@ -1,15 +1,17 @@
-package com.soa.student.service;
+package com.soa.student_service.service.impl;
 
-import com.soa.student.entity.Student;
-import com.soa.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import com.soa.student_service.entity.Student;
+import com.soa.student_service.repository.StudentRepository;
+import com.soa.student_service.service.StudentService;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StudentService {
+public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
