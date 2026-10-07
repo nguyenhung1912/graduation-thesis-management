@@ -66,7 +66,6 @@
     alertMessage = '';
     try {
       if (isEditMode && selectedStudent) {
-        // Sử dụng studentId thay cho id
         await studentApi.update(selectedStudent.studentId, formData);
         alertType = 'success';
         alertMessage = `Cập nhật thông tin sinh viên [${formData.studentId}] thành công.`;
@@ -90,7 +89,6 @@
     isSubmitting = true;
     alertMessage = '';
     try {
-      // Sử dụng studentId thay cho id
       await studentApi.delete(studentToDelete.studentId);
       alertType = 'success';
       alertMessage = `Đã xóa sinh viên [${studentToDelete.studentId}] ${studentToDelete.fullName}.`;

@@ -13,16 +13,15 @@
     onCancel = undefined,
   } = $props();
 
-  // Đổi initialData?.id thành studentId
-  // svelte-ignore state_referenced_locally
+
   let studentId = $state(initialData?.studentId ?? '');
-  // svelte-ignore state_referenced_locally
+
   let fullName = $state(initialData?.fullName ?? '');
-  // svelte-ignore state_referenced_locally
+
   let className = $state(initialData?.className ?? '');
-  // svelte-ignore state_referenced_locally
+
   let email = $state(initialData?.email ?? '');
-  // svelte-ignore state_referenced_locally
+
   let gpa = $state(initialData?.gpa ?? 3.0);
   let errorMessage = $state('');
 
@@ -54,7 +53,6 @@
     }
 
     if (onSubmit) {
-      // Gửi đúng key studentId lên Backend
       onSubmit({
         studentId: cleanId,
         fullName: cleanFullName,
