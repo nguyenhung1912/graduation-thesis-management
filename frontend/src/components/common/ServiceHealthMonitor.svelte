@@ -28,6 +28,14 @@
       status: "unknown",
       latency: null,
     },
+    {
+      id: "report",
+      name: "Report Service",
+      port: "8084",
+      url: `${API_BASE.REPORT}/health`,
+      status: "unknown",
+      latency: null,
+    },
   ]);
 
   let isChecking = $state(false);

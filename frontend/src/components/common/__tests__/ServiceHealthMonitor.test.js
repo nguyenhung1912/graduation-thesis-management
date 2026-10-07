@@ -8,7 +8,7 @@ describe('ServiceHealthMonitor Component (Bonus Feature Tests)', () => {
     vi.restoreAllMocks();
   });
 
-  it('renders all 3 microservice chips (:8081, :8082, :8083)', async () => {
+  it('renders all 4 microservice chips (:8081, :8082, :8083, :8084)', async () => {
     vi.spyOn(httpClient, 'get').mockResolvedValue([]);
 
     render(ServiceHealthMonitor);
@@ -17,6 +17,7 @@ describe('ServiceHealthMonitor Component (Bonus Feature Tests)', () => {
       expect(screen.getByText(':8081')).toBeInTheDocument();
       expect(screen.getByText(':8082')).toBeInTheDocument();
       expect(screen.getByText(':8083')).toBeInTheDocument();
+      expect(screen.getByText(':8084')).toBeInTheDocument();
     });
   });
 
@@ -39,7 +40,7 @@ describe('ServiceHealthMonitor Component (Bonus Feature Tests)', () => {
     const refreshBtn = screen.getByRole('button', { name: /kiểm tra lại kết nối service/i });
     await fireEvent.click(refreshBtn);
 
-    // Initial check (3 calls) + Reping (3 calls) = 6 calls
-    expect(httpClient.get).toHaveBeenCalledTimes(6);
+    // Initial check (4 calls) + Reping (4 calls) = 8 calls
+    expect(httpClient.get).toHaveBeenCalledTimes(8);
   });
 });

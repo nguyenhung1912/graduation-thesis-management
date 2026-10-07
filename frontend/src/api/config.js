@@ -7,4 +7,6 @@ export const API_BASE = {
   REGISTRATION:
     import.meta.env.VITE_REGISTRATION_API_URL ||
     "http://localhost:8083/api/registrations",
+  REPORT:
+    import.meta.env.VITE_REPORT_API_URL || "http://localhost:8084/api/reports",
 };
