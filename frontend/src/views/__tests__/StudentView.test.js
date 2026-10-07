@@ -5,7 +5,7 @@ import { studentApi } from '../../api/studentApi.js';
 
 describe('StudentView Container Component (Smart Component Tests)', () => {
   const sampleStudents = [
-    { id: 'SV01', fullName: 'Nguyễn Văn Nam', className: 'CNTT01', email: 'nam@soa.edu.vn', gpa: 3.5, eligible: true },
+    { studentId: 'SV01', fullName: 'Nguyễn Văn Nam', className: 'CNTT01', email: 'nam@soa.edu.vn', gpa: 3.5, eligible: true },
   ];
 
   beforeEach(() => {

@@ -66,13 +66,13 @@
     alertMessage = '';
     try {
       if (isEditMode && selectedStudent) {
-        await studentApi.update(selectedStudent.id, formData);
+        await studentApi.update(selectedStudent.studentId, formData);
         alertType = 'success';
-        alertMessage = `Cập nhật thông tin sinh viên [${formData.id}] thành công.`;
+        alertMessage = `Cập nhật thông tin sinh viên [${formData.studentId}] thành công.`;
       } else {
         await studentApi.create(formData);
         alertType = 'success';
-        alertMessage = `Thêm mới sinh viên "${formData.fullName}" (${formData.id}) thành công.`;
+        alertMessage = `Thêm mới sinh viên "${formData.fullName}" (${formData.studentId}) thành công.`;
       }
       closeFormModal();
       await loadStudents();
@@ -89,9 +89,9 @@
     isSubmitting = true;
     alertMessage = '';
     try {
-      await studentApi.delete(studentToDelete.id);
+      await studentApi.delete(studentToDelete.studentId);
       alertType = 'success';
-      alertMessage = `Đã xóa sinh viên [${studentToDelete.id}] ${studentToDelete.fullName}.`;
+      alertMessage = `Đã xóa sinh viên [${studentToDelete.studentId}] ${studentToDelete.fullName}.`;
       closeDeleteModal();
       await loadStudents();
     } catch (err) {
@@ -160,7 +160,7 @@
 <!-- Modal Thêm / Sửa Sinh viên -->
 <Modal
   open={isFormModalOpen}
-  title={isEditMode ? `Chỉnh sửa sinh viên: ${selectedStudent?.id}` : 'Thêm sinh viên mới'}
+  title={isEditMode ? `Chỉnh sửa sinh viên: ${selectedStudent?.studentId}` : 'Thêm sinh viên mới'}
   onClose={closeFormModal}
 >
   {#if isFormModalOpen}
@@ -186,7 +186,7 @@
         <AlertTriangle size={28} class="warning-icon" />
       </div>
       <p class="text-sm text-zinc-800">
-        Bạn có chắc chắn muốn xóa sinh viên <strong class="text-zinc-950">[{studentToDelete.id}] {studentToDelete.fullName}</strong>?
+        Bạn có chắc chắn muốn xóa sinh viên <strong class="text-zinc-950">[{studentToDelete.studentId}] {studentToDelete.fullName}</strong>?
       </p>
       <small class="delete-warning-hint block text-xs text-zinc-400">Hành động này không thể hoàn tác.</small>
     </div>
