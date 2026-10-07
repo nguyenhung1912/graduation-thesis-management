@@ -1,11 +1,8 @@
 <script>
   import Badge from "../common/Badge.svelte";
-  import { Pencil, Trash2, Search } from "@lucide/svelte";
+  import { Pencil, Trash2, Search, Printer } from "@lucide/svelte";
+  import { reportApi } from "../../api/reportApi.js";
 
-  /**
-   * ThesisTable.svelte - Presentational Component (Dumb)
-   * Hiển thị bảng danh sách đề tài và phát sự kiện sửa/xóa.
-   */
   let { theses = [], onEdit = undefined, onDelete = undefined } = $props();
 
   let searchTerm = $state("");
@@ -77,7 +74,7 @@
           >
           <th
             scope="col"
-            class="px-4 py-3 font-semibold text-zinc-700 text-right w-28"
+            class="px-4 py-3 font-semibold text-zinc-700 text-right w-36"
             >Thao tác</th
           >
         </tr>
@@ -124,6 +121,16 @@
                 <div
                   class="action-buttons inline-flex items-center gap-1.5 justify-end"
                 >
+                  <a
+                    href={reportApi.getThesisPdfUrl(thesis.id)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="outline action-btn h-8 w-8 inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950 transition-colors cursor-pointer"
+                    aria-label="In phiếu đề tài {thesis.id}"
+                    title="In phiếu giao nhiệm vụ đồ án (PDF)"
+                  >
+                    <Printer size={14} />
+                  </a>
                   {#if onEdit}
                     <button
                       type="button"

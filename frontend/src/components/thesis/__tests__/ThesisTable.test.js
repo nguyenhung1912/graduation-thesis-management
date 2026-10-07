@@ -97,4 +97,17 @@ describe("ThesisTable Component (Dumb Component Unit Tests)", () => {
     expect(screen.queryByText("Hệ thống SOA Spring")).not.toBeInTheDocument();
     expect(screen.getByText("Kiến trúc Microservices")).toBeInTheDocument();
   });
+
+  it("renders export PDF link with correct report URL", () => {
+    render(ThesisTable, {
+      props: {
+        theses: sampleTheses,
+      },
+    });
+
+    const printLink = screen.getByRole("link", { name: /in phiếu đề tài DT01/i });
+    expect(printLink).toBeInTheDocument();
+    expect(printLink).toHaveAttribute("href", "http://localhost:8084/api/reports/theses/DT01/pdf");
+    expect(printLink).toHaveAttribute("target", "_blank");
+  });
 });
