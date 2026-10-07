@@ -30,6 +30,17 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
+		<!-- 1. Validation: Dùng để kiểm tra tính hợp lệ của dữ liệu đầu vào -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- 2. Health Check & Monitoring: Giám sát trạng thái sống còn của service -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-h2console</artifactId>

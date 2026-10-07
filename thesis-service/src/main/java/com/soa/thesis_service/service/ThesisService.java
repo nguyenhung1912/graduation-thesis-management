@@ -1,20 +1,20 @@
 package com.soa.thesis_service.service;
 
-import com.soa.thesis_service.entity.Thesis;
+import com.soa.thesis_service.dto.ThesisRequestDto;
+import com.soa.thesis_service.dto.ThesisResponseDto;
 import java.util.List;
 
 public interface ThesisService {
-    List<Thesis> getAllTheses();
+    List<ThesisResponseDto> getAllTheses();
 
-    Thesis getThesisById(String id);
+    ThesisResponseDto getThesisById(String id);
 
-    Thesis createThesis(Thesis thesis);
+    ThesisResponseDto createThesis(ThesisRequestDto requestDto);
 
-    Thesis updateThesis(String id, Thesis thesis);
+    ThesisResponseDto updateThesis(String id, ThesisRequestDto requestDto);
 
     void deleteThesis(String id);
 
-    // Nghiệp vụ liên kết cho registration-service gọi qua REST
     boolean checkAvailability(String id);
 
     boolean registerStudent(String id);
