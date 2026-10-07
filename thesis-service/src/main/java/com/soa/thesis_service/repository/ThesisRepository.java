@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface ThesisRepository extends JpaRepository<Thesis, String> {
 
     // Câu lệnh UPDATE nguyên tử (Atomic Update) trực tiếp dưới CSDL
