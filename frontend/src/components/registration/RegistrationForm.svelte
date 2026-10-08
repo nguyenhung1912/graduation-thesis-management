@@ -23,7 +23,8 @@
   let availableStudents = $derived(
     students.filter((s) => {
       const isEligible = s.eligible !== false && (s.gpa === undefined || s.gpa >= 2.5);
-      const notRegistered = !registeredStudentIds.includes(s.id);
+      const studentKey = s.studentId || s.id;
+      const notRegistered = !registeredStudentIds.includes(studentKey);
       return isEligible && notRegistered;
     })
   );
@@ -46,7 +47,7 @@
       return;
     }
 
-    const student = students.find((s) => s.id === selectedStudentId);
+    const student = students.find((s) => (s.studentId || s.id) === selectedStudentId);
     const thesis = theses.find((t) => t.id === selectedThesisId);
 
     if (onSubmit) {
@@ -94,9 +95,10 @@
       class="h-9 w-full rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm shadow-xs transition-colors focus:outline-none focus:ring-1 focus:ring-zinc-950 disabled:bg-zinc-100 disabled:text-zinc-400 cursor-pointer"
     >
       <option value="">-- Chọn sinh viên đủ điều kiện --</option>
-      {#each availableStudents as s (s.id)}
-        <option value={s.id}>
-          [{s.id}] {s.fullName} - {s.className ?? ''} (GPA: {s.gpa ?? '-'})
+      {#each availableStudents as s (s.studentId || s.id)}
+        {@const sId = s.studentId || s.id}
+        <option value={sId}>
+          [{sId}] {s.fullName} - {s.className ?? ''} (GPA: {s.gpa ?? '-'})
         </option>
       {/each}
     </select>

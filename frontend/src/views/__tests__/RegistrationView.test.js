@@ -75,4 +75,19 @@ describe('RegistrationView Container Component (Smart Component Tests)', () => {
 
     expect(registrationApi.getAll).toHaveBeenCalledTimes(2);
   });
+
+  it('correctly maps studentName when student object has studentId instead of id', async () => {
+    const realStudents = [
+      { studentId: 'SV01', fullName: 'Nguyễn Văn Nam', className: 'CNTT01', gpa: 3.5, eligible: true },
+    ];
+    vi.spyOn(registrationApi, 'getAll').mockResolvedValue(sampleRegistrations);
+    vi.spyOn(studentApi, 'getAll').mockResolvedValue(realStudents);
+    vi.spyOn(thesisApi, 'getAll').mockResolvedValue(sampleTheses);
+
+    render(RegistrationView);
+
+    await waitFor(() => {
+      expect(screen.getByText('Nguyễn Văn Nam')).toBeInTheDocument();
+    });
+  });
 });

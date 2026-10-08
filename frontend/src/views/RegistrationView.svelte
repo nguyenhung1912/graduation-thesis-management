@@ -59,7 +59,7 @@
       students = rawStudents;
       theses = rawTheses;
 
-      const studentMap = new Map(rawStudents.map((s) => [s.id, s.fullName]));
+      const studentMap = new Map(rawStudents.map((s) => [s.studentId || s.id, s.fullName]));
       const thesisMap = new Map(rawTheses.map((t) => [t.id, t.title]));
 
       registrations = rawRegs.map((r) => ({
