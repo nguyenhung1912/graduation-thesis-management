@@ -1,6 +1,7 @@
 <script>
-  import { httpClient } from "../../api/httpClient.js";
-  import { API_BASE } from "../../api/config.js";
+  import { httpClient } from "../../core/http/httpClient.js";
+  import { API_BASE } from "../../core/gateway/config.js";
+  import { reportApi } from "../../modules/report/api/reportApi.js";
   import { Activity, RefreshCw } from "@lucide/svelte";
 
   let services = $state([
@@ -28,6 +29,14 @@
       status: "unknown",
       latency: null,
     },
+    {
+      id: "report",
+      name: "Report Service",
+      port: "8084",
+      url: reportApi.getHealthUrl(),
+      status: "unknown",
+      latency: null,
+    },
   ]);
 
   let isChecking = $state(false);
@@ -49,7 +58,9 @@
           services[index].latency = elapsed;
         } catch (error) {
           const elapsed = Math.round(performance.now() - startTime);
-          if (error && error.status && error.status > 0) {
+          const isDown =
+            !error?.status || [0, 502, 503, 504].includes(error.status);
+          if (!isDown) {
             services[index].status = "online";
             services[index].latency = elapsed;
           } else {

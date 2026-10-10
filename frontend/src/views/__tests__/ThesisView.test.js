@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import ThesisView from '../ThesisView.svelte';
-import { thesisApi } from '../../api/thesisApi.js';
+import { thesisApi } from '../../modules/thesis/api/thesisApi.js';
 
 describe('ThesisView Container Component (Smart Component Tests)', () => {
   const sampleTheses = [

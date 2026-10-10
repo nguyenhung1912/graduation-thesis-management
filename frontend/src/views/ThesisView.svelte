@@ -1,11 +1,12 @@
 <script>
-  import { thesisApi } from "../api/thesisApi.js";
+  import { thesisApi } from "../modules/thesis/api/thesisApi.js";
   import ThesisTable from "../components/thesis/ThesisTable.svelte";
   import ThesisForm from "../components/thesis/ThesisForm.svelte";
   import Modal from "../components/common/Modal.svelte";
   import Alert from "../components/common/Alert.svelte";
   import Loading from "../components/common/Loading.svelte";
-  import { Plus, RefreshCw, BookOpen, AlertTriangle } from "@lucide/svelte";
+  import { Plus, RefreshCw, BookOpen, AlertTriangle, FileText } from "@lucide/svelte";
+  import { reportApi } from "../modules/report/api/reportApi.js";
 
   let theses = $state([]);
   let isLoading = $state(false);
@@ -29,7 +30,7 @@
     } catch (err) {
       alertType = "danger";
       alertMessage =
-        err?.message || "Không thể kết nối đến Thesis Service (Port 8082).";
+        err?.message || "Không thể kết nối đến Thesis Service.";
     } finally {
       isLoading = false;
     }
@@ -121,7 +122,7 @@
         <span>Dịch vụ kết nối:</span>
         <code
           class="rounded-md bg-zinc-100 px-2.5 py-0.5 text-sm font-semibold text-zinc-900 font-mono border border-zinc-200 shadow-2xs"
-          >thesis-service (Port 8082)</code
+          >thesis-service</code
         >
       </p>
     </div>
@@ -137,6 +138,16 @@
         <RefreshCw size={14} class={isLoading ? "animate-spin" : ""} />
         Làm mới
       </button>
+
+      <a
+        href={reportApi.getSummaryPdfUrl()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="outline secondary inline-flex items-center gap-1.5 h-9 px-3.5 rounded-md border border-zinc-200 bg-white text-xs font-medium text-zinc-700 hover:bg-zinc-100 transition-colors cursor-pointer"
+        title="Xuất báo cáo tổng hợp danh sách đề tài toàn khoa (PDF)"
+      >
+        <FileText size={14} /> Xuất PDF tổng hợp
+      </a>
 
       <button
         type="button"
@@ -158,7 +169,7 @@
   {/if}
 
   {#if isLoading && theses.length === 0}
-    <Loading text="Đang tải danh sách đề tài từ port 8082..." />
+    <Loading text="Đang tải danh sách đề tài..." />
   {:else}
     <ThesisTable {theses} onEdit={openEditModal} onDelete={openDeleteModal} />
   {/if}

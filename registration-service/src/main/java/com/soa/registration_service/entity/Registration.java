@@ -17,10 +17,10 @@ public class Registration {
     private Long id;
 
     @Column(name = "student_id", nullable = false)
-    private Long studentId;
+    private String studentId;
 
     @Column(name = "thesis_id", nullable = false)
-    private Long thesisId;
+    private String thesisId;
 
     @Column(name = "status", nullable = false)
     private String status;
@@ -28,7 +28,7 @@ public class Registration {
     public Registration() {
     }
 
-    public Registration(Long studentId, Long thesisId, String status) {
+    public Registration(String studentId, String thesisId, String status) {
         this.studentId = studentId;
         this.thesisId = thesisId;
         this.status = status;
@@ -38,19 +38,19 @@ public class Registration {
         return id;
     }
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
-    public Long getThesisId() {
+    public String getThesisId() {
         return thesisId;
     }
 
-    public void setThesisId(Long thesisId) {
+    public void setThesisId(String thesisId) {
         this.thesisId = thesisId;
     }
 

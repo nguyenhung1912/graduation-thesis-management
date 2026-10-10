@@ -1,43 +1,74 @@
-# Svelte + Vite
+# Graduation Thesis Management - Frontend (SOA Consumer)
 
-This template should help get you started developing with Svelte in Vite.
+Hệ thống giao diện người dùng Quản lý Đề tài Tốt nghiệp, được thiết kế theo chuẩn **Kiến trúc Hướng Dịch vụ (Service-Oriented Architecture - SOA)** đóng vai trò là **Service Consumer** và **Service Aggregator**.
 
-## Recommended IDE Setup
+---
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## 🏛️ Kiến trúc SOA trong Frontend
 
-## Need an official Svelte framework?
+### 1. Tính trong suốt về vị trí (Location Transparency)
+- Frontend hoàn toàn **không phụ thuộc vào địa chỉ vật lý** (IP, Port) của các backend microservice.
+- Mọi truy vấn từ trình duyệt đều đi qua lớp Reverse Proxy / Gateway thống nhất (`/api/...`):
+  - Sinh viên: `/api/students` ➔ định tuyến đến `student-service`
+  - Đề tài: `/api/theses` ➔ định tuyến đến `thesis-service`
+  - Đăng ký: `/api/registrations` ➔ định tuyến đến `registration-service`
+  - Báo cáo PDF: `/api/reports` ➔ định tuyến đến `report-service`
+- Toàn bộ giao diện người dùng và thông báo lỗi không để lộ thông tin hạ tầng mạng (ports, raw IPs).
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+### 2. Tầng Chống Ăn Mòn (Anti-Corruption Layer - ACL) & DTOs
+- Mỗi domain nghiệp vụ sở hữu một module DTO riêng (`src/modules/*/dto/`):
+  - `validate*`: Kiểm tra tính toàn vẹn của dữ liệu tại ranh giới người dùng trước khi gửi đi.
+  - `to*Payload`: Chuyển đổi dữ liệu từ form UI thành cấu trúc Payload đúng Hợp đồng Dịch vụ (Service Contract).
+  - `from*Response`: Chuẩn hóa dữ liệu trả về từ Microservices về cấu trúc chuẩn dùng cho UI.
+- Đảm bảo các component hiển thị (Presentational / Dumb Components) không bị phụ thuộc trực tiếp vào định dạng thô của cơ sở dữ liệu backend.
 
-## Technical considerations
+### 3. Phối hợp Dịch vụ (Service Orchestration & Composition)
+- Module `registrationCompositeService` (`src/modules/registration/services/`) đóng vai trò là **SOA Composite Aggregator**:
+  - Gọi song song 3 dịch vụ (`student-service`, `thesis-service`, `registration-service`) để tổng hợp màn hình điều phối đồ án tốt nghiệp.
+  - **Khả năng chịu lỗi từng phần (Graceful Degradation):** Nếu một trong các microservice gặp sự cố, hệ thống vẫn duy trì hoạt động với dữ liệu fallback và cảnh báo rõ ràng dịch vụ đang offline.
 
-**Why use this over SvelteKit?**
+---
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## 📁 Cấu trúc Thư mục
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+```text
+frontend/src/
+├── core/                       # Thành phần dùng chung toàn hệ thống
+│   ├── gateway/config.js       # Cấu hình địa chỉ dịch vụ và proxy
+│   └── http/httpClient.js      # HTTP Client chuẩn hóa lỗi và timeout
+├── modules/                    # Phân chia theo SOA Domain
+│   ├── student/                # Domain Sinh viên (api, dto)
+│   ├── thesis/                 # Domain Đề tài (api, dto)
+│   ├── registration/           # Domain Đăng ký & Composite Aggregator
+│   └── report/                 # Domain Báo cáo xuất PDF (api)
+├── components/                 # Dumb / Presentational Components
+│   ├── common/                 # UI dùng chung (Alert, Modal, Badge, Monitor)
+│   ├── student/                # StudentForm, StudentTable
+│   ├── thesis/                 # ThesisForm, ThesisTable
+│   └── registration/           # RegistrationForm, RegistrationTable
+└── views/                      # Smart / Container Components
+    ├── StudentView.svelte
+    ├── ThesisView.svelte
+    └── RegistrationView.svelte
+```
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+---
 
-**Why include `.vscode/extensions.json`?**
+## 🛠️ Hướng dẫn Chạy & Kiểm thử
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+```bash
+# Cài đặt thư viện
+pnpm install
 
-**Why enable `checkJs` in the JS template?**
+# Khởi chạy môi trường phát triển (Port 5173)
+pnpm dev
 
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
+# Kiểm tra cú pháp và kiểu dữ liệu Svelte (0 errors, 0 warnings)
+pnpm check
 
-**Why is HMR not preserving my local component state?**
+# Chạy toàn bộ bộ kiểm thử tự động (106 unit & integration tests)
+pnpm test
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+# Đóng gói sản phẩm (Production build)
+pnpm build
 ```

@@ -1,10 +1,7 @@
 <script>
   import { Save, X } from '@lucide/svelte';
-
-  /**
-   * StudentForm.svelte - Presentational Component (Dumb)
-   * Quản lý nhập liệu và xác thực thông tin Sinh viên.
-   */
+  import { validateStudent, toStudentPayload } from '../../modules/student/dto/student.dto.js';
+  
   let {
     initialData = null,
     isEdit = false,
@@ -13,15 +10,15 @@
     onCancel = undefined,
   } = $props();
 
-
+  // svelte-ignore state_referenced_locally
   let studentId = $state(initialData?.studentId ?? '');
-
+  // svelte-ignore state_referenced_locally
   let fullName = $state(initialData?.fullName ?? '');
-
+  // svelte-ignore state_referenced_locally
   let className = $state(initialData?.className ?? '');
-
+  // svelte-ignore state_referenced_locally
   let email = $state(initialData?.email ?? '');
-
+  // svelte-ignore state_referenced_locally
   let gpa = $state(initialData?.gpa ?? 3.0);
   let errorMessage = $state('');
 
@@ -29,38 +26,22 @@
     event.preventDefault();
     errorMessage = '';
 
-    const cleanId = studentId.trim().toUpperCase();
-    const cleanFullName = fullName.trim();
-    const cleanClass = className.trim().toUpperCase();
-    const cleanEmail = email.trim();
-    const numGpa = Number(gpa);
+    const formData = {
+      studentId,
+      fullName,
+      className,
+      email,
+      gpa,
+    };
 
-    if (!cleanId) {
-      errorMessage = 'Vui lòng nhập Mã số sinh viên (MSSV).';
-      return;
-    }
-    if (!cleanFullName) {
-      errorMessage = 'Vui lòng nhập Họ và tên sinh viên.';
-      return;
-    }
-    if (!cleanClass) {
-      errorMessage = 'Vui lòng nhập Lớp sinh hoạt.';
-      return;
-    }
-    if (isNaN(numGpa) || numGpa < 0 || numGpa > 4.0) {
-      errorMessage = 'Điểm GPA phải nằm trong khoảng từ 0.0 đến 4.0.';
+    const validation = validateStudent(formData);
+    if (!validation.valid) {
+      errorMessage = validation.errors[0];
       return;
     }
 
     if (onSubmit) {
-      onSubmit({
-        studentId: cleanId,
-        fullName: cleanFullName,
-        className: cleanClass,
-        email: cleanEmail || `${cleanId.toLowerCase()}@soa.edu.vn`,
-        gpa: numGpa,
-        eligible: numGpa >= 2.5,
-      });
+      onSubmit(toStudentPayload(formData));
     }
   }
 </script>

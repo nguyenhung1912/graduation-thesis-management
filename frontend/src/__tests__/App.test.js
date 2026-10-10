@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import App from '../App.svelte';
-import { thesisApi } from '../api/thesisApi.js';
-import { studentApi } from '../api/studentApi.js';
-import { registrationApi } from '../api/registrationApi.js';
+import { thesisApi } from '../modules/thesis/api/thesisApi.js';
+import { studentApi } from '../modules/student/api/studentApi.js';
+import { registrationApi } from '../modules/registration/api/registrationApi.js';
 
 describe('App Shell Integration Tests', () => {
   beforeEach(() => {
@@ -29,16 +29,16 @@ describe('App Shell Integration Tests', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { level: 2, name: /quản lý sinh viên/i })).toBeInTheDocument();
-      expect(screen.getByText(/student-service \(port 8081\)/i)).toBeInTheDocument();
+      expect(screen.getByText(/student-service/i)).toBeInTheDocument();
     });
 
     // Switch to Registration tab
-    const regTabBtn = screen.getByRole('button', { name: /đăng ký & tính điểm/i });
+    const regTabBtn = screen.getByRole('button', { name: /đăng ký đề tài/i });
     await fireEvent.click(regTabBtn);
 
     await waitFor(() => {
-      expect(screen.getByRole('heading', { level: 2, name: /đăng ký đề tài & tính điểm/i })).toBeInTheDocument();
-      expect(screen.getByText(/registration-service \(:8083\)/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { level: 2, name: /đăng ký đề tài/i })).toBeInTheDocument();
+      expect(screen.getByText(/registration-service/i)).toBeInTheDocument();
     });
   });
 });

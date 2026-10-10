@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/svelte";
 import ThesisTable from "../ThesisTable.svelte";
+import { reportApi } from "../../../modules/report/api/reportApi.js";
 
 describe("ThesisTable Component (Dumb Component Unit Tests)", () => {
   const sampleTheses = [
@@ -96,5 +97,18 @@ describe("ThesisTable Component (Dumb Component Unit Tests)", () => {
 
     expect(screen.queryByText("Hệ thống SOA Spring")).not.toBeInTheDocument();
     expect(screen.getByText("Kiến trúc Microservices")).toBeInTheDocument();
+  });
+
+  it("renders export PDF link with correct report URL", () => {
+    render(ThesisTable, {
+      props: {
+        theses: sampleTheses,
+      },
+    });
+
+    const printLink = screen.getByRole("link", { name: /in phiếu đề tài DT01/i });
+    expect(printLink).toBeInTheDocument();
+    expect(printLink).toHaveAttribute("href", reportApi.getThesisPdfUrl("DT01"));
+    expect(printLink).toHaveAttribute("target", "_blank");
   });
 });

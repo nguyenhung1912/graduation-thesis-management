@@ -96,4 +96,23 @@ describe('RegistrationForm Component (Dumb Component Unit Tests)', () => {
 
     expect(onCancelMock).toHaveBeenCalledTimes(1);
   });
+
+  it('correctly supports backend studentId field convention from student-service', async () => {
+    const realBackendStudents = [
+      { studentId: 'SV001', fullName: 'Vũ', className: 'SE17A', gpa: 3.5, eligible: true },
+      { studentId: 'SV002', fullName: 'Linh', className: 'SE17A', gpa: 3.8, eligible: true },
+    ];
+    render(RegistrationForm, {
+      props: {
+        students: realBackendStudents,
+        theses: sampleTheses,
+        registeredStudentIds: ['SV001'],
+      },
+    });
+
+    const studentSelect = screen.getByLabelText(/chọn sinh viên đăng ký/i);
+    expect(studentSelect).toBeInTheDocument();
+    expect(screen.queryByText(/\[SV001\]/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/\[SV002\]/i)).toBeInTheDocument();
+  });
 });
