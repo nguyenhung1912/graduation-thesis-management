@@ -1,7 +1,7 @@
 <script>
   import Badge from "../common/Badge.svelte";
   import { Pencil, Trash2, Search, Printer } from "@lucide/svelte";
-  import { reportApi } from "../../api/reportApi.js";
+  import { reportApi } from "../../modules/report/api/reportApi.js";
 
   let { theses = [], onEdit = undefined, onDelete = undefined } = $props();
 

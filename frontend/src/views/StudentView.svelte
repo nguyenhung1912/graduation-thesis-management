@@ -1,5 +1,5 @@
 <script>
-  import { studentApi } from '../api/studentApi.js';
+  import { studentApi } from '../modules/student/api/studentApi.js';
   import StudentTable from '../components/student/StudentTable.svelte';
   import StudentForm from '../components/student/StudentForm.svelte';
   import Modal from '../components/common/Modal.svelte';
@@ -28,7 +28,7 @@
       students = Array.isArray(data) ? data : [];
     } catch (err) {
       alertType = 'danger';
-      alertMessage = err?.message || 'Không thể kết nối đến Student Service (Port 8081).';
+      alertMessage = err?.message || 'Không thể kết nối đến Student Service.';
     } finally {
       isLoading = false;
     }
@@ -111,7 +111,7 @@
       </h2>
       <p class="service-badge text-sm text-zinc-600 flex items-center gap-1.5 font-normal">
         <span>Dịch vụ kết nối:</span>
-        <code class="rounded-md bg-zinc-100 px-2.5 py-0.5 text-sm font-semibold text-zinc-900 font-mono border border-zinc-200 shadow-2xs">student-service (Port 8081)</code>
+        <code class="rounded-md bg-zinc-100 px-2.5 py-0.5 text-sm font-semibold text-zinc-900 font-mono border border-zinc-200 shadow-2xs">student-service</code>
       </p>
     </div>
 
@@ -147,7 +147,7 @@
   {/if}
 
   {#if isLoading && students.length === 0}
-    <Loading text="Đang tải danh sách sinh viên từ port 8081..." />
+    <Loading text="Đang tải danh sách sinh viên..." />
   {:else}
     <StudentTable
       {students}

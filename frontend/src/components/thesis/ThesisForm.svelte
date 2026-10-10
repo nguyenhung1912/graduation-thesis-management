@@ -1,5 +1,6 @@
 <script>
   import { Save, X } from '@lucide/svelte';
+  import { validateThesis, toThesisPayload } from '../../modules/thesis/dto/thesis.dto.js';
 
   /**
    * ThesisForm.svelte - Presentational Component (Dumb)
@@ -27,36 +28,22 @@
     event.preventDefault();
     errorMessage = '';
 
-    const cleanId = id.trim().toUpperCase();
-    const cleanTitle = title.trim();
-    const cleanInstructor = instructor.trim();
-    const numMax = Number(maxStudents);
+    const formData = {
+      id,
+      title,
+      instructor,
+      maxStudents,
+      currentStudents: initialData?.currentStudents ?? 0,
+    };
 
-    if (!cleanId) {
-      errorMessage = 'Vui lòng nhập mã đề tài (ví dụ: DT01).';
-      return;
-    }
-    if (!cleanTitle) {
-      errorMessage = 'Vui lòng nhập tên đề tài.';
-      return;
-    }
-    if (!cleanInstructor) {
-      errorMessage = 'Vui lòng nhập tên giảng viên hướng dẫn.';
-      return;
-    }
-    if (isNaN(numMax) || numMax < 1) {
-      errorMessage = 'Số lượng sinh viên tối đa phải từ 1 trở lên.';
+    const validation = validateThesis(formData);
+    if (!validation.valid) {
+      errorMessage = validation.errors[0];
       return;
     }
 
     if (onSubmit) {
-      onSubmit({
-        id: cleanId,
-        title: cleanTitle,
-        instructor: cleanInstructor,
-        maxStudents: numMax,
-        currentStudents: initialData?.currentStudents ?? 0,
-      });
+      onSubmit(toThesisPayload(formData));
     }
   }
 </script>

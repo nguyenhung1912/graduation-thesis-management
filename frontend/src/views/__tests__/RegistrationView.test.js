@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import RegistrationView from '../RegistrationView.svelte';
-import { registrationApi } from '../../api/registrationApi.js';
-import { studentApi } from '../../api/studentApi.js';
-import { thesisApi } from '../../api/thesisApi.js';
+import { registrationApi } from '../../modules/registration/api/registrationApi.js';
+import { studentApi } from '../../modules/student/api/studentApi.js';
+import { thesisApi } from '../../modules/thesis/api/thesisApi.js';
 
 describe('RegistrationView Container Component (Smart Component Tests)', () => {
   const sampleRegistrations = [

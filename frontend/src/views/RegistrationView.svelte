@@ -1,10 +1,7 @@
 <script>
-  import { registrationApi } from "../api/registrationApi.js";
-  import { studentApi } from "../api/studentApi.js";
-  import { thesisApi } from "../api/thesisApi.js";
+  import { registrationCompositeService } from "../modules/registration/services/registrationCompositeService.js";
   import RegistrationTable from "../components/registration/RegistrationTable.svelte";
   import RegistrationForm from "../components/registration/RegistrationForm.svelte";
-  import ScoreModal from "../components/registration/ScoreModal.svelte";
   import Modal from "../components/common/Modal.svelte";
   import Alert from "../components/common/Alert.svelte";
   import Loading from "../components/common/Loading.svelte";
@@ -12,7 +9,6 @@
     ClipboardList,
     Plus,
     RefreshCw,
-    AlertTriangle,
   } from "@lucide/svelte";
 
   let registrations = $state([]);
@@ -25,61 +21,20 @@
 
   let isCreateModalOpen = $state(false);
 
-  let isGradeModalOpen = $state(false);
-  let selectedRegistrationForGrading = $state(null);
-
-  let isCancelModalOpen = $state(false);
-  let registrationToCancel = $state(null);
-
   let registeredStudentIds = $derived(registrations.map((r) => r.studentId));
 
   async function loadAllData() {
     isLoading = true;
     alertMessage = "";
     try {
-      const [regsRes, studentsRes, thesesRes] = await Promise.allSettled([
-        registrationApi.getAll(),
-        studentApi.getAll(),
-        thesisApi.getAll(),
-      ]);
+      const data = await registrationCompositeService.loadDashboardData();
+      students = data.students;
+      theses = data.theses;
+      registrations = data.registrations;
 
-      const rawStudents =
-        studentsRes.status === "fulfilled" && Array.isArray(studentsRes.value)
-          ? studentsRes.value
-          : [];
-      const rawTheses =
-        thesesRes.status === "fulfilled" && Array.isArray(thesesRes.value)
-          ? thesesRes.value
-          : [];
-      const rawRegs =
-        regsRes.status === "fulfilled" && Array.isArray(regsRes.value)
-          ? regsRes.value
-          : [];
-
-      students = rawStudents;
-      theses = rawTheses;
-
-      const studentMap = new Map(rawStudents.map((s) => [s.studentId || s.id, s.fullName]));
-      const thesisMap = new Map(rawTheses.map((t) => [t.id, t.title]));
-
-      registrations = rawRegs.map((r) => ({
-        ...r,
-        studentName:
-          r.studentName || studentMap.get(r.studentId) || r.studentId,
-        thesisTitle: r.thesisTitle || thesisMap.get(r.thesisId) || r.thesisId,
-      }));
-
-      const failedServices = [];
-      if (regsRes.status === "rejected")
-        failedServices.push("registration-service (:8083)");
-      if (studentsRes.status === "rejected")
-        failedServices.push("student-service (:8081)");
-      if (thesesRes.status === "rejected")
-        failedServices.push("thesis-service (:8082)");
-
-      if (failedServices.length > 0) {
+      if (data.warningMessage) {
         alertType = "warning";
-        alertMessage = `Không thể kết nối đến: ${failedServices.join(", ")}. Hãy kiểm tra các service đang chạy.`;
+        alertMessage = data.warningMessage;
       }
     } catch (err) {
       alertType = "danger";
@@ -100,31 +55,11 @@
     isCreateModalOpen = false;
   }
 
-  function openGradeModal(reg) {
-    selectedRegistrationForGrading = reg;
-    isGradeModalOpen = true;
-  }
-
-  function closeGradeModal() {
-    isGradeModalOpen = false;
-    selectedRegistrationForGrading = null;
-  }
-
-  function openCancelModal(reg) {
-    registrationToCancel = reg;
-    isCancelModalOpen = true;
-  }
-
-  function closeCancelModal() {
-    isCancelModalOpen = false;
-    registrationToCancel = null;
-  }
-
   async function handleRegisterSubmit(regData) {
     isSubmitting = true;
     alertMessage = "";
     try {
-      await registrationApi.create(regData);
+      await registrationCompositeService.registerThesis(regData);
       alertType = "success";
       alertMessage = `Đăng ký thành công đề tài [${regData.thesisId}] cho sinh viên [${regData.studentId}].`;
       closeCreateModal();
@@ -132,45 +67,6 @@
     } catch (err) {
       alertType = "danger";
       alertMessage = err?.message || "Đăng ký đề tài thất bại.";
-    } finally {
-      isSubmitting = false;
-    }
-  }
-
-  async function handleSaveScores(scoreData) {
-    if (!selectedRegistrationForGrading) return;
-    isSubmitting = true;
-    alertMessage = "";
-    try {
-      await registrationApi.updateScores(
-        selectedRegistrationForGrading.id,
-        scoreData,
-      );
-      alertType = "success";
-      alertMessage = `Cập nhật điểm thành công cho đăng ký [${selectedRegistrationForGrading.id}]. Điểm tổng kết: ${scoreData.totalScore}.`;
-      closeGradeModal();
-      await loadAllData();
-    } catch (err) {
-      alertType = "danger";
-      alertMessage = err?.message || "Không thể lưu kết quả chấm điểm.";
-    } finally {
-      isSubmitting = false;
-    }
-  }
-
-  async function handleConfirmCancel() {
-    if (!registrationToCancel) return;
-    isSubmitting = true;
-    alertMessage = "";
-    try {
-      await registrationApi.delete(registrationToCancel.id);
-      alertType = "success";
-      alertMessage = `Đã hủy lượt đăng ký [${registrationToCancel.id}].`;
-      closeCancelModal();
-      await loadAllData();
-    } catch (err) {
-      alertType = "danger";
-      alertMessage = err?.message || "Không thể hủy lượt đăng ký.";
     } finally {
       isSubmitting = false;
     }
@@ -185,26 +81,15 @@
       <h2
         class="flex items-center gap-2.5 text-2xl font-bold tracking-tight text-zinc-900"
       >
-        <ClipboardList size={24} class="header-icon text-zinc-900" /> Đăng ký Đề
-        tài & Tính điểm
+        <ClipboardList size={24} class="header-icon text-zinc-900" /> Đăng ký Đề tài
       </h2>
       <p
         class="service-badge text-sm text-zinc-600 flex items-center gap-1.5 font-normal flex-wrap"
       >
-        <span>Điều phối dịch vụ:</span>
+        <span>Dịch vụ kết nối:</span>
         <code
           class="rounded-md bg-zinc-100 px-2.5 py-0.5 text-sm font-semibold text-zinc-900 font-mono border border-zinc-200 shadow-2xs"
-          >registration-service (:8083)</code
-        >
-        <span class="text-zinc-400 font-bold">&harr;</span>
-        <code
-          class="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-800 font-mono border border-zinc-200"
-          >:8081</code
-        >
-        <span class="text-zinc-400">&</span>
-        <code
-          class="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-800 font-mono border border-zinc-200"
-          >:8082</code
+          >registration-service</code
         >
       </p>
     </div>
@@ -245,8 +130,6 @@
   {:else}
     <RegistrationTable
       {registrations}
-      onGrade={openGradeModal}
-      onDelete={openCancelModal}
     />
   {/if}
 </section>
@@ -266,63 +149,5 @@
       onSubmit={handleRegisterSubmit}
       onCancel={closeCreateModal}
     />
-  {/if}
-</Modal>
-
-<!-- Modal Chấm điểm Đồ án -->
-{#if isGradeModalOpen && selectedRegistrationForGrading}
-  <ScoreModal
-    registration={selectedRegistrationForGrading}
-    open={isGradeModalOpen}
-    {isSubmitting}
-    onSave={handleSaveScores}
-    onClose={closeGradeModal}
-  />
-{/if}
-
-<!-- Modal Xác nhận Hủy Đăng ký -->
-<Modal
-  open={isCancelModalOpen}
-  title="Xác nhận hủy đăng ký đề tài"
-  onClose={closeCancelModal}
->
-  {#if registrationToCancel}
-    <div class="confirm-cancel-body text-center py-4 space-y-2">
-      <div class="inline-flex p-3 rounded-full bg-rose-50 text-rose-600 mb-1">
-        <AlertTriangle size={28} class="warning-icon" />
-      </div>
-      <p class="text-sm text-zinc-800">
-        Bạn có chắc muốn hủy đăng ký mã <strong class="text-zinc-950"
-          >[{registrationToCancel.id}]</strong
-        >
-        của sinh viên
-        <strong class="text-zinc-950">{registrationToCancel.studentName}</strong
-        >?
-      </p>
-      <small class="cancel-warning-hint block text-xs text-zinc-400"
-        >Slot của đề tài sẽ được giải phóng lại.</small
-      >
-    </div>
-    <footer
-      class="confirm-cancel-actions flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100"
-    >
-      <button
-        type="button"
-        class="secondary outline inline-flex items-center justify-center h-9 px-4 rounded-md border border-zinc-200 bg-white text-xs font-medium text-zinc-700 hover:bg-zinc-100 transition-colors cursor-pointer"
-        onclick={closeCancelModal}
-        disabled={isSubmitting}
-      >
-        Hủy bỏ
-      </button>
-      <button
-        type="button"
-        class="danger-btn inline-flex items-center justify-center h-9 px-4 rounded-md bg-rose-600 text-xs font-medium text-white hover:bg-rose-700 transition-colors cursor-pointer disabled:opacity-50"
-        onclick={handleConfirmCancel}
-        aria-busy={isSubmitting}
-        disabled={isSubmitting}
-      >
-        Xác nhận hủy
-      </button>
-    </footer>
   {/if}
 </Modal>

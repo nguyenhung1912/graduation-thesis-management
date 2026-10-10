@@ -55,7 +55,7 @@
               : 'text-zinc-600 hover:text-zinc-900'}"
             onclick={() => (currentTab = "theses")}
           >
-            <BookOpen size={15} /> Quản lý Đề tài (:8082)
+            <BookOpen size={15} /> Quản lý Đề tài
           </button>
 
           <button
@@ -66,7 +66,7 @@
               : 'text-zinc-600 hover:text-zinc-900'}"
             onclick={() => (currentTab = "students")}
           >
-            <Users size={15} /> Quản lý Sinh viên (:8081)
+            <Users size={15} /> Quản lý Sinh viên
           </button>
 
           <button
@@ -77,7 +77,7 @@
               : 'text-zinc-600 hover:text-zinc-900'}"
             onclick={() => (currentTab = "registrations")}
           >
-            <ClipboardList size={15} /> Đăng ký & Tính điểm (:8083)
+            <ClipboardList size={15} /> Đăng ký Đề tài
           </button>
         </div>
       </nav>
