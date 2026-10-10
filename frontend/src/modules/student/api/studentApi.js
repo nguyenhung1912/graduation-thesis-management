@@ -1,5 +1,5 @@
-import { httpClient } from "./httpClient.js";
-import { API_BASE } from "./config.js";
+import { httpClient } from "../../../core/http/httpClient.js";
+import { API_BASE } from "../../../core/gateway/config.js";
 
 export const studentApi = {
   getAll() {
@@ -23,11 +23,5 @@ export const studentApi = {
 
   delete(id) {
     return httpClient.delete(`${API_BASE.STUDENT}/${encodeURIComponent(id)}`);
-  },
-
-  checkEligibility(id) {
-    return httpClient.get(
-      `${API_BASE.STUDENT}/${encodeURIComponent(id)}/eligibility`,
-    );
   },
 };

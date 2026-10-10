@@ -1,5 +1,5 @@
-import { httpClient } from "./httpClient.js";
-import { API_BASE } from "./config.js";
+import { httpClient } from "../../../core/http/httpClient.js";
+import { API_BASE } from "../../../core/gateway/config.js";
 
 export const thesisApi = {
   getAll() {
@@ -23,11 +23,5 @@ export const thesisApi = {
 
   delete(id) {
     return httpClient.delete(`${API_BASE.THESIS}/${encodeURIComponent(id)}`);
-  },
-
-  checkAvailability(id) {
-    return httpClient.get(
-      `${API_BASE.THESIS}/${encodeURIComponent(id)}/available`,
-    );
   },
 };

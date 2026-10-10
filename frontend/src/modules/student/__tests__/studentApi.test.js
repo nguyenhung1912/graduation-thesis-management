@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { studentApi } from '../studentApi.js';
-import { httpClient } from '../httpClient.js';
-import { API_BASE } from '../config.js';
+import { studentApi } from '../api/studentApi.js';
+import { httpClient } from '../../../core/http/httpClient.js';
+import { API_BASE } from '../../../core/gateway/config.js';
 
 describe('studentApi (Service Consumer Unit Tests)', () => {
   beforeEach(() => {
@@ -57,14 +57,5 @@ describe('studentApi (Service Consumer Unit Tests)', () => {
 
     expect(httpClient.delete).toHaveBeenCalledWith(`${API_BASE.STUDENT}/SV02`);
     expect(result.message).toContain('Đã xóa');
-  });
-
-  it('should call httpClient.get on /eligibility for checkEligibility()', async () => {
-    vi.spyOn(httpClient, 'get').mockResolvedValue({ studentId: 'SV01', eligible: true });
-
-    const result = await studentApi.checkEligibility('SV01');
-
-    expect(httpClient.get).toHaveBeenCalledWith(`${API_BASE.STUDENT}/SV01/eligibility`);
-    expect(result.eligible).toBe(true);
   });
 });

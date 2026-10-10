@@ -141,4 +141,85 @@ describe('httpClient (SRP Unit Tests)', () => {
       expect(err.message).toContain('hết thời gian chờ');
     }
   });
+
+  describe('RFC 7807 Problem Details and Resilience', () => {
+    it('populates RFC 7807 problem details properties correctly', () => {
+      const err404 = new ApiError(404, 'Not found', { title: 'Resource Missing', detail: 'Item 123 is missing' });
+      expect(err404.status).toBe(404);
+      expect(err404.title).toBe('Resource Missing');
+      expect(err404.detail).toBe('Item 123 is missing');
+      expect(err404.isClientError).toBe(true);
+      expect(err404.isServerError).toBe(false);
+      expect(err404.isNetworkError).toBe(false);
+
+      const err503 = new ApiError(503, 'Unavailable');
+      expect(err503.isServerError).toBe(true);
+      expect(err503.title).toBe('Service Unavailable');
+
+      const netErr = new ApiError(0, 'Network down');
+      expect(netErr.isNetworkError).toBe(true);
+      expect(netErr.title).toBe('Network Failure');
+    });
+
+    it('retries request on network error when retries option is specified and recovers', async () => {
+      const mockSuccess = [{ id: 'DT01', title: 'Recovered' }];
+      globalThis.fetch = vi
+        .fn()
+        .mockRejectedValueOnce(new TypeError('Temporary connection drop'))
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          headers: new Headers({ 'content-type': 'application/json' }),
+          json: async () => mockSuccess,
+        });
+
+      const result = await httpClient.get('http://localhost:8082/api/theses', {
+        retries: 1,
+        retryDelay: 10,
+      });
+
+      expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+      expect(result).toEqual(mockSuccess);
+    });
+
+    it('retries on HTTP 503 Service Unavailable and succeeds on subsequent attempt', async () => {
+      const mockSuccess = { status: 'healthy' };
+      globalThis.fetch = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 503,
+          headers: new Headers({ 'content-type': 'application/json' }),
+          json: async () => ({ message: 'Service starting up' }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          headers: new Headers({ 'content-type': 'application/json' }),
+          json: async () => mockSuccess,
+        });
+
+      const result = await httpClient.getWithRetry('http://localhost:8082/api/theses', {
+        retryDelay: 10,
+      });
+
+      expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+      expect(result).toEqual(mockSuccess);
+    });
+
+    it('does NOT retry on 4xx client errors (e.g. 404 Not Found)', async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 404,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({ message: 'Cannot find resource' }),
+      });
+
+      await expect(
+        httpClient.get('http://localhost:8082/api/theses', { retries: 2, retryDelay: 10 })
+      ).rejects.toThrow(ApiError);
+
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    });
+  });
 });

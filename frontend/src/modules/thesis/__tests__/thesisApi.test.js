@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { thesisApi } from '../thesisApi.js';
-import { httpClient } from '../httpClient.js';
-import { API_BASE } from '../config.js';
+import { thesisApi } from '../api/thesisApi.js';
+import { httpClient } from '../../../core/http/httpClient.js';
+import { API_BASE } from '../../../core/gateway/config.js';
 
 describe('thesisApi (Service Consumer Unit Tests)', () => {
   beforeEach(() => {
@@ -57,14 +57,5 @@ describe('thesisApi (Service Consumer Unit Tests)', () => {
 
     expect(httpClient.delete).toHaveBeenCalledWith(`${API_BASE.THESIS}/DT04`);
     expect(result.message).toContain('Đã xoá');
-  });
-
-  it('should call httpClient.get on /available for checkAvailability()', async () => {
-    vi.spyOn(httpClient, 'get').mockResolvedValue({ thesisId: 'DT01', available: true });
-
-    const result = await thesisApi.checkAvailability('DT01');
-
-    expect(httpClient.get).toHaveBeenCalledWith(`${API_BASE.THESIS}/DT01/available`);
-    expect(result.available).toBe(true);
   });
 });
