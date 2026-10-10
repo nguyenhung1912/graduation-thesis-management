@@ -2,10 +2,6 @@
   import { Save, X } from '@lucide/svelte';
   import { validateThesis, toThesisPayload } from '../../modules/thesis/dto/thesis.dto.js';
 
-  /**
-   * ThesisForm.svelte - Presentational Component (Dumb)
-   * Quản lý nhập liệu và xác thực form Đề tài trước khi phát sự kiện onSubmit.
-   */
   let {
     initialData = null,
     isEdit = false,
