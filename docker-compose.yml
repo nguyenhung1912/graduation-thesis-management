@@ -1,0 +1,100 @@
+services:
+  # ---------- DATABASE: 1 container PostgreSQL, 3 database riêng ----------
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Chạy 1 lần đầu để tạo student_db, thesis_db, registration_db
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - soa-network
+
+  # ---------- STUDENT SERVICE ----------
+  student-service:
+    build: ./student-service
+    container_name: student-service
+    environment:
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/student_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - soa-network
+
+  # ---------- THESIS SERVICE ----------
+  thesis-service:
+    build: ./thesis-service
+    container_name: thesis-service
+    environment:
+      SERVER_PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/thesis_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - soa-network
+
+  # ---------- REGISTRATION SERVICE (điều phối) ----------
+  registration-service:
+    build: ./registration-service
+    container_name: registration-service
+    environment:
+      SERVER_PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/registration_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # Gọi service khác bằng TÊN SERVICE, không dùng localhost
+      STUDENT_SERVICE_URL: http://student-service:8081
+      THESIS_SERVICE_URL: http://thesis-service:8082
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      student-service:
+        condition: service_started
+      thesis-service:
+        condition: service_started
+    networks:
+      - soa-network
+
+  # ---------- FRONTEND / CLIENT ----------
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - registration-service
+    networks:
+      - soa-network
+
+networks:
+  soa-network:
+    driver: bridge
+
+volumes:
+  pgdata:
