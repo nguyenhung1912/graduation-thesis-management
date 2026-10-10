@@ -16,7 +16,6 @@ public class PdfFontHelper {
     private BaseFont regularBaseFont;
     private BaseFont boldBaseFont;
     private BaseFont italicBaseFont;
-    private BaseFont boldItalicBaseFont;
 
     public PdfFontHelper() {
         initFonts();
@@ -41,17 +40,10 @@ public class PdfFontHelper {
                 "/usr/share/fonts/truetype/msttcorefonts/timesi.ttf",
                 "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Italic.ttf"
         };
-        String[] boldItalicCandidates = {
-                "C:/Windows/Fonts/timesbi.ttf",
-                "C:/Windows/Fonts/arialbi.ttf",
-                "/usr/share/fonts/truetype/msttcorefonts/timesbi.ttf",
-                "/usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf"
-        };
 
         regularBaseFont = tryLoadBaseFont(regularCandidates);
         boldBaseFont = tryLoadBaseFont(boldCandidates);
         italicBaseFont = tryLoadBaseFont(italicCandidates);
-        boldItalicBaseFont = tryLoadBaseFont(boldItalicCandidates);
 
         if (regularBaseFont != null) {
             log.info("PdfFontHelper: Đã nạp thành công Font Unicode tiếng Việt chuẩn.");
@@ -101,14 +93,6 @@ public class PdfFontHelper {
                         : FontFactory.getFont(FontFactory.TIMES_ROMAN, size, Font.ITALIC, Color.BLACK));
     }
 
-    public Font getBoldItalicFont(float size) {
-        return boldItalicBaseFont != null
-                ? new Font(boldItalicBaseFont, size, Font.NORMAL, Color.BLACK)
-                : (boldBaseFont != null
-                        ? new Font(boldBaseFont, size, Font.ITALIC, Color.BLACK)
-                        : FontFactory.getFont(FontFactory.TIMES_ROMAN, size, Font.BOLDITALIC, Color.BLACK));
-    }
-
     public Font getTitleFont() {
         return getBoldFont(15);
     }
@@ -119,10 +103,6 @@ public class PdfFontHelper {
 
     public Font getBodyFont() {
         return getRegularFont(11);
-    }
-
-    public Font getBodyBoldFont() {
-        return getBoldFont(11);
     }
 
     public Font getBodyItalicFont() {

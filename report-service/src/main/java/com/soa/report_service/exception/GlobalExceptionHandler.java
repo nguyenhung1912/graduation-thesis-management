@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
         log.error("Không thể kết nối đến thesis-service: {}", ex.getMessage());
         return buildErrorResponse(
                 HttpStatus.SERVICE_UNAVAILABLE,
-                "thesis-service (Port 8082) hiện đang ngoại tuyến hoặc không phản hồi. Vui lòng kiểm tra lại dịch vụ.");
+                "thesis-service hiện đang ngoại tuyến hoặc không phản hồi. Vui lòng kiểm tra lại dịch vụ.");
     }
 
     @ExceptionHandler(FeignException.class)
