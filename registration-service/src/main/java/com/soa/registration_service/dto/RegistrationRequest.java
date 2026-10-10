@@ -1,33 +1,32 @@
 
 package com.soa.registration_service.dto;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 
 public class RegistrationRequest {
 
-    @NotNull(message = "Student ID không được để trống")
-    private Long studentId;
+    @NotBlank(message = "Student ID không được để trống")
+    private String studentId;
 
-    @NotNull(message = "Thesis ID không được để trống")
-    private Long thesisId;
+    @NotBlank(message = "Thesis ID không được để trống")
+    private String thesisId;
 
     @NotBlank(message = "Status không được để trống")
     private String status;
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
-    public Long getThesisId() {
+    public String getThesisId() {
         return thesisId;
     }
 
-    public void setThesisId(Long thesisId) {
+    public void setThesisId(String thesisId) {
         this.thesisId = thesisId;
     }
 

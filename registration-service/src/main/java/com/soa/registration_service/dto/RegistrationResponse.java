@@ -4,8 +4,8 @@ package com.soa.registration_service.dto;
 public class RegistrationResponse {
 
     private Long id;
-    private Long studentId;
-    private Long thesisId;
+    private String studentId;
+    private String thesisId;
     private String status;
 
     public RegistrationResponse() {
@@ -13,8 +13,8 @@ public class RegistrationResponse {
 
     public RegistrationResponse(
             Long id,
-            Long studentId,
-            Long thesisId,
+            String studentId,
+            String thesisId,
             String status) {
         this.id = id;
         this.studentId = studentId;
@@ -26,11 +26,11 @@ public class RegistrationResponse {
         return id;
     }
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public Long getThesisId() {
+    public String getThesisId() {
         return thesisId;
     }
 
