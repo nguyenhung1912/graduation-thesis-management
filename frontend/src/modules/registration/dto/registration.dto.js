@@ -21,7 +21,7 @@ export function toRegistrationPayload(data) {
   return {
     studentId: String(data?.studentId ?? "").trim(),
     thesisId: String(data?.thesisId ?? "").trim(),
-    status: String(data?.status || "REGISTERED").trim(),
+    status: String(data?.status || "Chờ phê duyệt").trim(),
   };
 }
 
@@ -34,6 +34,6 @@ export function fromRegistrationResponse(raw) {
     studentName: raw.studentName ? String(raw.studentName).trim() : null,
     thesisId: String(raw.thesisId || "").trim(),
     thesisTitle: raw.thesisTitle ? String(raw.thesisTitle).trim() : null,
-    status: raw.status || "REGISTERED",
+    status: raw.status || "Chờ phê duyệt",
   };
 }
