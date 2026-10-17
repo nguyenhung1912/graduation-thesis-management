@@ -2,8 +2,10 @@
 package com.soa.registration_service.service;
 
 import com.soa.registration_service.entity.Registration;
+import com.soa.registration_service.exception.RegistrationNotFoundException;
 import com.soa.registration_service.repository.RegistrationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,7 +28,19 @@ public class RegistrationService {
 
     public Registration getRegistrationById(Long id) {
         return registrationRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Không tìm thấy đăng ký có ID: " + id));
+                .orElseThrow(() -> new RegistrationNotFoundException(id));
+    }
+
+    @Transactional
+    public Registration updateStatus(Long id, String status) {
+        Registration registration = getRegistrationById(id);
+        registration.setStatus(status);
+        return registrationRepository.save(registration);
+    }
+
+    @Transactional
+    public void deleteRegistration(Long id) {
+        Registration registration = getRegistrationById(id);
+        registrationRepository.delete(registration);
     }
 }
