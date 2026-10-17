@@ -10,7 +10,7 @@ describe('RegistrationTable Component (Dumb Component Unit Tests)', () => {
       studentName: 'Nguyễn Văn Nam',
       thesisId: 'DT01',
       thesisTitle: 'SOA Spring Boot',
-      status: 'REGISTERED',
+      status: 'Chờ phê duyệt',
     },
     {
       id: 'DK02',
@@ -18,7 +18,7 @@ describe('RegistrationTable Component (Dumb Component Unit Tests)', () => {
       studentName: 'Lê Thị Mai',
       thesisId: 'DT02',
       thesisTitle: 'Microservices Arch',
-      status: 'APPROVED',
+      status: 'Đã chấp nhận',
     },
   ];
 
@@ -32,11 +32,11 @@ describe('RegistrationTable Component (Dumb Component Unit Tests)', () => {
     expect(screen.getByText('DK01')).toBeInTheDocument();
     expect(screen.getByText('Nguyễn Văn Nam')).toBeInTheDocument();
     expect(screen.getByText('SOA Spring Boot')).toBeInTheDocument();
-    expect(screen.getByText('REGISTERED')).toBeInTheDocument();
+    expect(screen.getByText('Chờ phê duyệt')).toBeInTheDocument();
 
     expect(screen.getByText('DK02')).toBeInTheDocument();
     expect(screen.getByText('Lê Thị Mai')).toBeInTheDocument();
-    expect(screen.getByText('APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('Đã chấp nhận')).toBeInTheDocument();
   });
 
   it('displays empty state when registrations array is empty', () => {

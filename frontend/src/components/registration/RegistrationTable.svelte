@@ -28,17 +28,13 @@
   );
 
   function getStatusVariant(status) {
-    switch (String(status || "").toUpperCase()) {
-      case "REGISTERED":
-      case "APPROVED":
-        return "success";
-      case "REJECTED":
-      case "CANCELLED":
-        return "danger";
-      case "PENDING":
-        return "warning";
-      default:
-        return "secondary";
+    switch (String(status || "").trim()) {
+    case "Đã chấp nhận":
+    return "success";
+    case "Chờ phê duyệt":
+    return "warning";
+    default:
+    return "secondary";
     }
   }
 </script>
@@ -132,7 +128,7 @@
               <td class="px-4 py-3.5 text-center">
                 <Badge
                   variant={getStatusVariant(reg.status)}
-                  text={reg.status || "REGISTERED"}
+                  text={reg.status || "Chờ phê duyệt"}
                 />
               </td>
             </tr>
