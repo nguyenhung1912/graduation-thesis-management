@@ -13,4 +13,17 @@ export const registrationApi = {
   create(registration) {
     return httpClient.post(API_BASE.REGISTRATION, registration);
   },
+
+  updateStatus(id, status) {
+    return httpClient.patch(
+      `${API_BASE.REGISTRATION}/${encodeURIComponent(id)}/status`,
+      { status },
+    );
+  },
+
+  delete(id) {
+    return httpClient.delete(
+      `${API_BASE.REGISTRATION}/${encodeURIComponent(id)}`,
+    );
+  },
 };

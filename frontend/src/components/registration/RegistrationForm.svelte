@@ -44,7 +44,7 @@
       onSubmit({
         studentId: selectedStudentId,
         thesisId: selectedThesisId,
-        status: "REGISTERED",
+        status: "Chờ phê duyệt",
       });
     }
   }

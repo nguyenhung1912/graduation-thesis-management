@@ -3,6 +3,7 @@ package com.soa.registration_service.controller;
 
 import com.soa.registration_service.dto.RegistrationRequest;
 import com.soa.registration_service.dto.RegistrationResponse;
+import com.soa.registration_service.dto.StatusUpdateRequest;
 import com.soa.registration_service.entity.Registration;
 import com.soa.registration_service.service.RegistrationService;
 
@@ -71,5 +72,26 @@ public class RegistrationController {
                 registration.getStudentId(),
                 registration.getThesisId(),
                 registration.getStatus());
+    }
+
+    @PatchMapping("/{id}/status")
+    public RegistrationResponse updateRegistrationStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody StatusUpdateRequest request) {
+
+        Registration updated =
+                registrationService.updateStatus(id, request.getStatus());
+
+        return new RegistrationResponse(
+                updated.getId(),
+                updated.getStudentId(),
+                updated.getThesisId(),
+                updated.getStatus());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRegistration(@PathVariable Long id) {
+        registrationService.deleteRegistration(id);
+        return ResponseEntity.noContent().build();
     }
 }
