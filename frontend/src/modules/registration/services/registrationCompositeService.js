@@ -84,6 +84,24 @@ export const registrationCompositeService = {
     return await registrationApi.create(payload);
   },
 
+  async updateRegistrationStatus(id, status) {
+    if (!id) {
+      throw new Error("Mã đăng ký không hợp lệ.");
+    }
+    const cleanStatus = String(status ?? "").trim();
+    if (!cleanStatus) {
+      throw new Error("Trạng thái không được để trống.");
+    }
+    return await registrationApi.updateStatus(id, cleanStatus);
+  },
+
+  async deleteRegistration(id) {
+    if (!id) {
+      throw new Error("Mã đăng ký không hợp lệ.");
+    }
+    return await registrationApi.delete(id);
+  },
+
   getEligibleStudents(students, registeredStudentIds = []) {
     if (!Array.isArray(students)) return [];
     return students.filter((s) => {

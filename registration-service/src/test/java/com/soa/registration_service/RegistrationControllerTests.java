@@ -21,7 +21,7 @@ class RegistrationControllerTests {
     private long createRegistration() throws Exception {
         String body = mockMvc.perform(post("/api/registrations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"studentId\":\"SV099\",\"thesisId\":\"DT01\",\"status\":\"PENDING\"}"))
+                        .content("{\"studentId\":\"SV099\",\"thesisId\":\"DT01\",\"status\":\"Chờ duyệt\"}"))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         return Long.parseLong(body.replaceAll(".*\"id\":(\\d+).*", "$1"));
@@ -32,9 +32,9 @@ class RegistrationControllerTests {
         long id = createRegistration();
         mockMvc.perform(patch("/api/registrations/" + id + "/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"status\":\"APPROVED\"}"))
+                        .content("{\"status\":\"Đã duyệt\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is("APPROVED")));
+                .andExpect(jsonPath("$.status", is("Đã duyệt")));
     }
 
     @Test
@@ -50,7 +50,7 @@ class RegistrationControllerTests {
     void updateStatus_notFound_returns404() throws Exception {
         mockMvc.perform(patch("/api/registrations/99999/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"status\":\"APPROVED\"}"))
+                        .content("{\"status\":\"Đã duyệt\"}"))
                 .andExpect(status().isNotFound());
     }
 

@@ -62,4 +62,29 @@ describe('RegistrationTable Component (Dumb Component Unit Tests)', () => {
     expect(screen.queryByText('Nguyễn Văn Nam')).not.toBeInTheDocument();
     expect(screen.getByText('Lê Thị Mai')).toBeInTheDocument();
   });
+
+  it('triggers onEdit and onDelete callbacks when clicking action buttons', async () => {
+    let editedReg = null;
+    let deletedReg = null;
+
+    render(RegistrationTable, {
+      props: {
+        registrations: sampleRegistrations,
+        onEdit: (reg) => {
+          editedReg = reg;
+        },
+        onDelete: (reg) => {
+          deletedReg = reg;
+        },
+      },
+    });
+
+    const editBtn = screen.getByRole('button', { name: /sửa trạng thái đăng ký DK01/i });
+    await fireEvent.click(editBtn);
+    expect(editedReg).toEqual(sampleRegistrations[0]);
+
+    const deleteBtn = screen.getByRole('button', { name: /xóa đăng ký DK02/i });
+    await fireEvent.click(deleteBtn);
+    expect(deletedReg).toEqual(sampleRegistrations[1]);
+  });
 });

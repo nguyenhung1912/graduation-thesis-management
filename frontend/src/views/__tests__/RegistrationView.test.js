@@ -90,4 +90,51 @@ describe('RegistrationView Container Component (Smart Component Tests)', () => {
       expect(screen.getByText('Nguyễn Văn Nam')).toBeInTheDocument();
     });
   });
+
+  it('opens status update modal and calls registrationApi.updateStatus on submit', async () => {
+    vi.spyOn(registrationApi, 'getAll').mockResolvedValue(sampleRegistrations);
+    vi.spyOn(studentApi, 'getAll').mockResolvedValue(sampleStudents);
+    vi.spyOn(thesisApi, 'getAll').mockResolvedValue(sampleTheses);
+    const updateSpy = vi
+      .spyOn(registrationApi, 'updateStatus')
+      .mockResolvedValue({ ...sampleRegistrations[0], status: 'Đã duyệt' });
+
+    render(RegistrationView);
+
+    const editBtn = await screen.findByRole('button', { name: /sửa trạng thái đăng ký DK01/i });
+    await fireEvent.click(editBtn);
+
+    expect(screen.getByText('Cập nhật trạng thái đăng ký')).toBeInTheDocument();
+
+    const selectEl = screen.getByLabelText(/^trạng thái đăng ký/i);
+    await fireEvent.change(selectEl, { target: { value: 'Đã duyệt' } });
+
+    const saveBtn = screen.getByRole('button', { name: /lưu trạng thái/i });
+    await fireEvent.click(saveBtn);
+
+    await waitFor(() => {
+      expect(updateSpy).toHaveBeenCalledWith('DK01', 'Đã duyệt');
+    });
+  });
+
+  it('opens delete modal and calls registrationApi.delete on confirm', async () => {
+    vi.spyOn(registrationApi, 'getAll').mockResolvedValue(sampleRegistrations);
+    vi.spyOn(studentApi, 'getAll').mockResolvedValue(sampleStudents);
+    vi.spyOn(thesisApi, 'getAll').mockResolvedValue(sampleTheses);
+    const deleteSpy = vi.spyOn(registrationApi, 'delete').mockResolvedValue(null);
+
+    render(RegistrationView);
+
+    const deleteBtn = await screen.findByRole('button', { name: /xóa đăng ký DK01/i });
+    await fireEvent.click(deleteBtn);
+
+    expect(screen.getByText('Xác nhận xóa đăng ký')).toBeInTheDocument();
+
+    const confirmBtn = screen.getByRole('button', { name: /xác nhận xóa/i });
+    await fireEvent.click(confirmBtn);
+
+    await waitFor(() => {
+      expect(deleteSpy).toHaveBeenCalledWith('DK01');
+    });
+  });
 });

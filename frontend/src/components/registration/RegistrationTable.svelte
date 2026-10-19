@@ -1,8 +1,12 @@
 <script>
   import Badge from "../common/Badge.svelte";
-  import { Search } from "@lucide/svelte";
+  import { Pencil, Trash2, Search } from "@lucide/svelte";
 
-  let { registrations = [] } = $props();
+  let {
+    registrations = [],
+    onEdit = undefined,
+    onDelete = undefined,
+  } = $props();
 
   let searchTerm = $state("");
 
@@ -29,12 +33,23 @@
 
   function getStatusVariant(status) {
     switch (String(status || "").trim()) {
-    case "Đã chấp nhận":
-    return "success";
-    case "Chờ phê duyệt":
-    return "warning";
-    default:
-    return "secondary";
+      case "Đã chấp nhận":
+      case "Đã duyệt":
+      case "APPROVED":
+        return "success";
+      case "Chờ phê duyệt":
+      case "Chờ duyệt":
+      case "Đã đăng ký":
+      case "PENDING":
+      case "REGISTERED":
+        return "warning";
+      case "Từ chối":
+      case "Đã hủy":
+      case "REJECTED":
+      case "CANCELLED":
+        return "danger";
+      default:
+        return "secondary";
     }
   }
 </script>
@@ -86,13 +101,18 @@
             class="px-4 py-3 font-semibold text-zinc-700 text-center w-36"
             >Trạng thái</th
           >
+          <th
+            scope="col"
+            class="px-4 py-3 font-semibold text-zinc-700 text-right w-28"
+            >Thao tác</th
+          >
         </tr>
       </thead>
       <tbody class="divide-y divide-zinc-100">
         {#if filteredRegistrations.length === 0}
           <tr>
             <td
-              colspan="4"
+              colspan="5"
               class="empty-state text-center py-10 px-4 text-zinc-400 italic text-sm"
             >
               Không có lượt đăng ký nào.
@@ -130,6 +150,34 @@
                   variant={getStatusVariant(reg.status)}
                   text={reg.status || "Chờ phê duyệt"}
                 />
+              </td>
+              <td class="px-4 py-3.5 text-right">
+                <div
+                  class="action-buttons inline-flex items-center gap-1.5 justify-end"
+                >
+                  {#if onEdit}
+                    <button
+                      type="button"
+                      class="outline action-btn h-8 w-8 inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950 transition-colors cursor-pointer"
+                      aria-label="Sửa trạng thái đăng ký {reg.id}"
+                      onclick={() => onEdit(reg)}
+                      title="Cập nhật trạng thái"
+                    >
+                      <Pencil size={14} />
+                    </button>
+                  {/if}
+                  {#if onDelete}
+                    <button
+                      type="button"
+                      class="outline secondary action-btn danger-btn h-8 w-8 inline-flex items-center justify-center rounded-md border border-zinc-200 bg-white text-zinc-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-colors cursor-pointer"
+                      aria-label="Xóa đăng ký {reg.id}"
+                      onclick={() => onDelete(reg)}
+                      title="Xóa đăng ký"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  {/if}
+                </div>
               </td>
             </tr>
           {/each}

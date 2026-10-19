@@ -91,6 +91,27 @@ describe('httpClient (SRP Unit Tests)', () => {
     expect(result.title).toBe('Updated Thesis');
   });
 
+  it('should perform PATCH request with JSON stringified body', async () => {
+    const payload = { status: 'Đã duyệt' };
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      headers: new Headers({ 'content-type': 'application/json' }),
+      json: async () => ({ id: 1, ...payload }),
+    });
+
+    const result = await httpClient.patch('http://localhost:8083/api/registrations/1/status', payload);
+
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      'http://localhost:8083/api/registrations/1/status',
+      expect.objectContaining({
+        method: 'PATCH',
+        body: JSON.stringify(payload),
+      })
+    );
+    expect(result.status).toBe('Đã duyệt');
+  });
+
   it('should throw ApiError with status and server error message on 400/404/500', async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,

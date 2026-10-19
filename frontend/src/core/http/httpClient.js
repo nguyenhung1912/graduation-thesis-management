@@ -217,6 +217,14 @@ export const httpClient = {
     });
   },
 
+  patch(url, body, options = {}) {
+    return this.request(url, {
+      ...options,
+      method: "PATCH",
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  },
+
   delete(url, options = {}) {
     return this.request(url, { ...options, method: "DELETE" });
   },

@@ -39,4 +39,26 @@ describe('registrationApi (Service Consumer Unit Tests)', () => {
     expect(httpClient.post).toHaveBeenCalledWith(API_BASE.REGISTRATION, newReg);
     expect(result.id).toBe(2);
   });
+
+  it('should call httpClient.patch for updateStatus() with status payload', async () => {
+    const updatedItem = { id: 1, studentId: 'SV01', thesisId: 'DT01', status: 'Đã duyệt' };
+    vi.spyOn(httpClient, 'patch').mockResolvedValue(updatedItem);
+
+    const result = await registrationApi.updateStatus(1, 'Đã duyệt');
+
+    expect(httpClient.patch).toHaveBeenCalledWith(
+      `${API_BASE.REGISTRATION}/1/status`,
+      { status: 'Đã duyệt' }
+    );
+    expect(result).toEqual(updatedItem);
+  });
+
+  it('should call httpClient.delete for delete() with encoded ID', async () => {
+    vi.spyOn(httpClient, 'delete').mockResolvedValue(null);
+
+    const result = await registrationApi.delete(1);
+
+    expect(httpClient.delete).toHaveBeenCalledWith(`${API_BASE.REGISTRATION}/1`);
+    expect(result).toBeNull();
+  });
 });
