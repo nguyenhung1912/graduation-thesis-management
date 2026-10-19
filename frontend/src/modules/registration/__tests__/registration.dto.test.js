@@ -32,7 +32,7 @@ describe("Registration DTO & Contract (Unit Tests)", () => {
     const payload = toRegistrationPayload(data);
     expect(payload.studentId).toBe("SV01");
     expect(payload.thesisId).toBe("DT01");
-    expect(payload.status).toBe("REGISTERED");
+    expect(payload.status).toBe("Chờ phê duyệt");
   });
 
   it("normalizes response data from registration-service", () => {

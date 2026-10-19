@@ -86,4 +86,23 @@ describe("registrationCompositeService (SOA Service Aggregator Tests)", () => {
     expect(availableTheses).toHaveLength(1);
     expect(availableTheses[0].id).toBe("DT01");
   });
+
+  it("updates registration status via registrationApi.updateStatus", async () => {
+    const patchSpy = vi
+      .spyOn(registrationApi, "updateStatus")
+      .mockResolvedValue({ id: 1, status: "Đã duyệt" });
+
+    const res = await registrationCompositeService.updateRegistrationStatus(1, "Đã duyệt");
+
+    expect(patchSpy).toHaveBeenCalledWith(1, "Đã duyệt");
+    expect(res.status).toBe("Đã duyệt");
+  });
+
+  it("deletes registration via registrationApi.delete", async () => {
+    const deleteSpy = vi.spyOn(registrationApi, "delete").mockResolvedValue(null);
+
+    await registrationCompositeService.deleteRegistration(1);
+
+    expect(deleteSpy).toHaveBeenCalledWith(1);
+  });
 });
