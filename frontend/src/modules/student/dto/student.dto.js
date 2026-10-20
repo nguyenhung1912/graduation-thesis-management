@@ -44,30 +44,6 @@ export function toStudentPayload(data) {
   };
 }
 
-export function fromStudentResponse(raw) {
-  if (!raw || typeof raw !== "object") return null;
-
-  const studentId = String(raw.studentId || raw.id || "").trim();
-  const gpa =
-    raw.gpa !== undefined && raw.gpa !== null ? Number(raw.gpa) : null;
-  const eligible =
-    raw.eligible !== undefined
-      ? Boolean(raw.eligible)
-      : gpa !== null
-        ? gpa >= 2.5
-        : true;
-
-  return {
-    studentId,
-    id: studentId,
-    fullName: String(raw.fullName || "").trim(),
-    className: String(raw.className || "").trim(),
-    email: String(raw.email || "").trim(),
-    gpa,
-    eligible,
-  };
-}
-
 export function isStudentEligible(student) {
   if (!student) return false;
   if (student.eligible !== undefined) return Boolean(student.eligible);

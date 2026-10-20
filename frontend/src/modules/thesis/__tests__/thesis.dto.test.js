@@ -2,9 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   validateThesis,
   toThesisPayload,
-  fromThesisResponse,
   isThesisAvailable,
-  getRemainingSlots,
 } from "../dto/thesis.dto.js";
 
 describe("Thesis DTO & Contract (Unit Tests)", () => {
@@ -46,14 +44,11 @@ describe("Thesis DTO & Contract (Unit Tests)", () => {
     expect(payload.maxStudents).toBe(4);
   });
 
-  it("evaluates availability and remaining slots correctly", () => {
+  it("evaluates availability correctly", () => {
     const available = { maxStudents: 3, currentStudents: 1 };
     const full = { maxStudents: 2, currentStudents: 2 };
 
     expect(isThesisAvailable(available)).toBe(true);
-    expect(getRemainingSlots(available)).toBe(2);
-
     expect(isThesisAvailable(full)).toBe(false);
-    expect(getRemainingSlots(full)).toBe(0);
   });
 });

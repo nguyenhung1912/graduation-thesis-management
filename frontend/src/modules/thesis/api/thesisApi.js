@@ -6,10 +6,6 @@ export const thesisApi = {
     return httpClient.get(API_BASE.THESIS);
   },
 
-  getById(id) {
-    return httpClient.get(`${API_BASE.THESIS}/${encodeURIComponent(id)}`);
-  },
-
   create(thesis) {
     return httpClient.post(API_BASE.THESIS, thesis);
   },

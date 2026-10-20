@@ -20,16 +20,6 @@ describe('studentApi (Service Consumer Unit Tests)', () => {
     expect(result).toEqual(mockList);
   });
 
-  it('should call httpClient.get with encoded ID for getById()', async () => {
-    const mockStudent = { id: 'SV01', fullName: 'Nguyễn Văn Nam', className: 'CNTT01', email: 'nam@soa.edu.vn', gpa: 3.5 };
-    vi.spyOn(httpClient, 'get').mockResolvedValue(mockStudent);
-
-    const result = await studentApi.getById('SV01');
-
-    expect(httpClient.get).toHaveBeenCalledWith(`${API_BASE.STUDENT}/SV01`);
-    expect(result).toEqual(mockStudent);
-  });
-
   it('should call httpClient.post for create() with student payload', async () => {
     const newStudent = { id: 'SV02', fullName: 'Lê Thị Mai', className: 'CNTT02', email: 'mai@soa.edu.vn', gpa: 3.8 };
     vi.spyOn(httpClient, 'post').mockResolvedValue({ ...newStudent, eligible: true });

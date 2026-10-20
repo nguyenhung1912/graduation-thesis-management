@@ -6,10 +6,6 @@ export const studentApi = {
     return httpClient.get(API_BASE.STUDENT);
   },
 
-  getById(id) {
-    return httpClient.get(`${API_BASE.STUDENT}/${encodeURIComponent(id)}`);
-  },
-
   create(student) {
     return httpClient.post(API_BASE.STUDENT, student);
   },

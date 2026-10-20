@@ -44,7 +44,7 @@
   /**
    * ping từng microservice với timeout ngắn (2.5s) để xác định status
    */
-  export async function checkAllServices() {
+  async function checkAllServices() {
     isChecking = true;
 
     await Promise.all(
