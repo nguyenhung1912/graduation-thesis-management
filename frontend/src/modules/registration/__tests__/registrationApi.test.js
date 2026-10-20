@@ -20,16 +20,6 @@ describe('registrationApi (Service Consumer Unit Tests)', () => {
     expect(result).toEqual(mockList);
   });
 
-  it('should call httpClient.get with encoded ID for getById()', async () => {
-    const mockItem = { id: 1, studentId: 'SV01', thesisId: 'DT01', status: 'REGISTERED' };
-    vi.spyOn(httpClient, 'get').mockResolvedValue(mockItem);
-
-    const result = await registrationApi.getById('1');
-
-    expect(httpClient.get).toHaveBeenCalledWith(`${API_BASE.REGISTRATION}/1`);
-    expect(result).toEqual(mockItem);
-  });
-
   it('should call httpClient.post for create() with registration payload', async () => {
     const newReg = { studentId: 'SV02', thesisId: 'DT02', status: 'REGISTERED' };
     vi.spyOn(httpClient, 'post').mockResolvedValue({ id: 2, ...newReg });

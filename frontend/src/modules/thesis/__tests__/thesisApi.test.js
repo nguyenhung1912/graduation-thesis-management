@@ -20,16 +20,6 @@ describe('thesisApi (Service Consumer Unit Tests)', () => {
     expect(result).toEqual(mockList);
   });
 
-  it('should call httpClient.get with encoded ID for getById()', async () => {
-    const mockItem = { id: 'DT01', title: 'SOA Spring', instructor: 'TS. A', maxStudents: 3, currentStudents: 1 };
-    vi.spyOn(httpClient, 'get').mockResolvedValue(mockItem);
-
-    const result = await thesisApi.getById('DT01');
-
-    expect(httpClient.get).toHaveBeenCalledWith(`${API_BASE.THESIS}/DT01`);
-    expect(result).toEqual(mockItem);
-  });
-
   it('should call httpClient.post for create() with payload', async () => {
     const newThesis = { id: 'DT04', title: 'AI in Cloud', instructor: 'TS. D', maxStudents: 2 };
     vi.spyOn(httpClient, 'post').mockResolvedValue({ ...newThesis, currentStudents: 0 });

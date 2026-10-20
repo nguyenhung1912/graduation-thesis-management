@@ -1,4 +1,3 @@
-
 package com.soa.registration_service.entity;
 
 import jakarta.persistence.Column;
@@ -26,12 +25,6 @@ public class Registration {
     private String status;
 
     public Registration() {
-    }
-
-    public Registration(String studentId, String thesisId, String status) {
-        this.studentId = studentId;
-        this.thesisId = thesisId;
-        this.status = status;
     }
 
     public Long getId() {

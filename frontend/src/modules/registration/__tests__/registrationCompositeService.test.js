@@ -77,16 +77,6 @@ describe("registrationCompositeService (SOA Service Aggregator Tests)", () => {
     ).rejects.toThrow("sinh viên");
   });
 
-  it("filters eligible students and available theses", () => {
-    const eligible = registrationCompositeService.getEligibleStudents(mockStudents, ["SV99"]);
-    expect(eligible).toHaveLength(1);
-    expect(eligible[0].studentId).toBe("SV01");
-
-    const availableTheses = registrationCompositeService.getAvailableTheses(mockTheses);
-    expect(availableTheses).toHaveLength(1);
-    expect(availableTheses[0].id).toBe("DT01");
-  });
-
   it("updates registration status via registrationApi.updateStatus", async () => {
     const patchSpy = vi
       .spyOn(registrationApi, "updateStatus")

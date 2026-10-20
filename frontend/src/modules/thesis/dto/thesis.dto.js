@@ -37,28 +37,9 @@ export function toThesisPayload(data) {
   };
 }
 
-export function fromThesisResponse(raw) {
-  if (!raw || typeof raw !== "object") return null;
-
-  return {
-    id: String(raw.id || "").trim(),
-    title: String(raw.title || "").trim(),
-    instructor: String(raw.instructor || "").trim(),
-    maxStudents: Number(raw.maxStudents ?? 1),
-    currentStudents: Number(raw.currentStudents ?? 0),
-  };
-}
-
 export function isThesisAvailable(thesis) {
   if (!thesis) return false;
   const current = Number(thesis.currentStudents ?? 0);
   const max = Number(thesis.maxStudents ?? 1);
   return current < max;
-}
-
-export function getRemainingSlots(thesis) {
-  if (!thesis) return 0;
-  const current = Number(thesis.currentStudents ?? 0);
-  const max = Number(thesis.maxStudents ?? 1);
-  return Math.max(0, max - current);
 }

@@ -192,14 +192,6 @@ export const httpClient = {
     return this.request(url, { ...options, method: "GET" });
   },
 
-  getWithRetry(url, options = {}) {
-    return this.request(url, {
-      retries: 2,
-      retryDelay: 100,
-      ...options,
-      method: "GET",
-    });
-  },
 
   post(url, body, options = {}) {
     return this.request(url, {

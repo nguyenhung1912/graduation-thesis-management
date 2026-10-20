@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   validateStudent,
   toStudentPayload,
-  fromStudentResponse,
   isStudentEligible,
 } from "../dto/student.dto.js";
 
@@ -45,20 +44,6 @@ describe("Student DTO & Contract (Unit Tests)", () => {
     expect(payload.className).toBe("KTPM01");
     expect(payload.gpa).toBe(3.26);
     expect(payload.eligible).toBe(true);
-  });
-
-  it("normalizes response data from backend", () => {
-    const raw = {
-      studentId: "SV01",
-      fullName: "Trần Thị Lan",
-      className: "CNTT02",
-      gpa: 2.4,
-      eligible: false,
-    };
-    const student = fromStudentResponse(raw);
-    expect(student.studentId).toBe("SV01");
-    expect(student.id).toBe("SV01");
-    expect(student.eligible).toBe(false);
   });
 
   it("calculates eligibility correctly based on GPA threshold (2.5)", () => {

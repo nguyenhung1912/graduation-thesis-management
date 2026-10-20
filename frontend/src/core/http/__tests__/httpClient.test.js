@@ -220,7 +220,8 @@ describe('httpClient (SRP Unit Tests)', () => {
           json: async () => mockSuccess,
         });
 
-      const result = await httpClient.getWithRetry('http://localhost:8082/api/theses', {
+      const result = await httpClient.get('http://localhost:8082/api/theses', {
+        retries: 2,
         retryDelay: 10,
       });
 

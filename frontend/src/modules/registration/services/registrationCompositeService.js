@@ -1,8 +1,6 @@
 import { registrationApi } from "../api/registrationApi.js";
 import { studentApi } from "../../student/api/studentApi.js";
 import { thesisApi } from "../../thesis/api/thesisApi.js";
-import { isStudentEligible } from "../../student/dto/student.dto.js";
-import { isThesisAvailable } from "../../thesis/dto/thesis.dto.js";
 import {
   validateRegistration,
   toRegistrationPayload,
@@ -100,20 +98,5 @@ export const registrationCompositeService = {
       throw new Error("Mã đăng ký không hợp lệ.");
     }
     return await registrationApi.delete(id);
-  },
-
-  getEligibleStudents(students, registeredStudentIds = []) {
-    if (!Array.isArray(students)) return [];
-    return students.filter((s) => {
-      const eligible = isStudentEligible(s);
-      const studentKey = s.studentId || s.id;
-      const notRegistered = !registeredStudentIds.includes(studentKey);
-      return eligible && notRegistered;
-    });
-  },
-
-  getAvailableTheses(theses) {
-    if (!Array.isArray(theses)) return [];
-    return theses.filter(isThesisAvailable);
   },
 };
